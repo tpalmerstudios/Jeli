@@ -44,14 +44,12 @@ void FrameBuffer::drawCircle (const int x, const int y, const size_t radius, con
 {
 		for (float angle = 0; angle < 2 * M_PI; angle += M_PI / (2 * radius * M_PI))
 		{
-				for (float t = 0; t < radius; ++t)
+				for (size_t t = 0; t < radius; ++t)
 				{
 						float fillX = x + (t * cos (angle));
 						float fillY = y + (t * sin (angle));
 						if (int (fillX) > -1 && int (fillY) > -1 && size_t (fillX) < w && size_t (fillY) < h)
 								setPixel (size_t (fillX), size_t (fillY) , color);
-						else
-								continue;
 				}
 		}
 }
