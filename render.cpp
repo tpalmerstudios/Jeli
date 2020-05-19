@@ -68,7 +68,6 @@ void render (FrameBuffer &fb, const GameState &gs)
 		const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
 		const size_t rectH = (fb.h / 3) / gs.map.h; // set height of rectangle 
 		// The sky!
-		drawSky (gs, fb);
 		// The grass
 		fb.drawRectangle (0, gs.player.horizon, fb.w, fb.h - gs.player.horizon, packColor(70, 255, 70));
 
@@ -109,6 +108,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 				drawSprite (fb, gs.monsters [i], depthBuffer, gs.player, gs.texMonsters);
 		} // Show sprites
 		drawMap (gs, fb, rectW, rectH);
+		drawSky (gs, fb);
 } //render ()
 
 void mapPositionAngle (float x, float y, float angle, const Map &map, FrameBuffer &fb, const uint32_t color)
