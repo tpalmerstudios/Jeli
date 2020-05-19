@@ -5,7 +5,7 @@ Based on ssloy/tinyraycaster. I probably should've forked it or something, but a
 
 ***Step 1 - Shape rendering***  
 	~Rectangle~  
-	Circle (90% done, need to work on origins outside of the screen dimensions)  
+	~Circle~  
 	Triangle (3 points?) and then create a converter func that does basic trig. 2 sides and angle, etc.  
 	Cubes (not sure what exactly to do here)  
 	ovals (again how do expand one side, must research)  
