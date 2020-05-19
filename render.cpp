@@ -24,8 +24,6 @@ void drawSky (const GameState &gs, FrameBuffer &fb);
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
 		fb.drawRectangle (0, 0, fb.w, gs.player.horizon, packColor (180, 180, 255));
-		fb.drawCircle (500, 200, 200, packColor (0, 255, 255));
-		fb.drawCircle (900, 100, 200, packColor (0, 255, 255));
 }
 
 void drawMap (const GameState &gs, FrameBuffer &fb, const size_t cellW, const size_t cellH)
