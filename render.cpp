@@ -20,6 +20,7 @@ void drawSprite (FrameBuffer &fb, const Sprite &sprite, const std::vector<float>
 void mapPositionAngle (float x, float y, float angle, const Map &map, FrameBuffer &fb, const uint32_t color);
 void drawMap (const GameState &gs, FrameBuffer &fb, const size_t cellW, const size_t cellH);
 void drawSky (const GameState &gs, FrameBuffer &fb);
+uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor);
 
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
@@ -152,33 +153,36 @@ void drawSprite (FrameBuffer &fb, const Sprite &sprite, const std::vector<float>
 				{
 						if (offsetY + int (loopY) < 0 || offsetY + loopY >= fb.h)
 								continue;
-						uint32_t color = texSprites.get (loopX * texSprites.size /spriteDispSize, loopY * texSprites.size / spriteDispSize, sprite.texID);
-						uint8_t r, g, b, a, bgR, bgG, bgB, bgA;
-						unpackColor (color, r, g, b, a);
+						uint32_t fgColor = texSprites.get (loopX * texSprites.size /spriteDispSize, loopY * texSprites.size / spriteDispSize, sprite.texID);
 						uint32_t bgColor = fb.img [(offsetX + loopX) + ((offsetY + loopY) * fb.w)];
-						unpackColor (bgColor, bgR, bgG, bgB, bgA);
-						// if r,g,b are greater than the background r,g,b take the difference times the opacity and add it to the background color, otherwise subtract it
-						size_t dif;
-						// Red
-						dif = (r - bgR) * float (a / 255);
-						if ((size_t) r - (size_t) bgR > 0)
-								r = ((size_t) bgR + dif > 255) ? 255 : bgR + (uint8_t) dif;
-						else
-								r = ((size_t) bgR - dif < 0) ? 0 : bgR - (uint8_t) dif;
-						// Green
-						dif = (g - bgG) * float (a / 255);
-						if ((size_t) g - (size_t) bgG > 0)
-								g = ((size_t) bgG + dif > 255) ? 255 : bgG + (uint8_t) dif;
-						else
-								g = ((size_t) bgG - dif < 0) ? 0 : bgG - (uint8_t) dif;
-						// Blue
-						dif = (b - bgB) * float (a / 255);
-						if ((size_t) b - (size_t) bgB > 0)
-								b = ((size_t) bgB + dif > 255) ? 255: bgB + (uint8_t) dif;
-						else
-								b = ((size_t) bgB - dif < 0) ? 0 : bgB - (uint8_t) dif;
-						fb.setPixel (offsetX + loopX, offsetY + loopY, packColor (r, g, b));
+						fb.setPixel (offsetX + loopX, offsetY + loopY, overlay (bgColor, fgColor));
 				}
 		}
 }
 
+uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor)
+{
+		// if r,g,b are greater than the background r,g,b take the difference times the opacity and add it to the background color, otherwise subtract it
+		uint8_t bgR, bgG, bgB, bgA, fgR, fgG, fgB, fgA;
+		unpackColor (bgColor, bgR, bgG, bgB, bgA);
+		unpackColor (fgColor, fgR, fgG, fgB, fgA);
+		// Red
+		size_t colorDif = (fgR - bgR) * float (fgA / 255);
+		if ((size_t) fgR -(size_t) bgR > 0)
+				fgR = ((size_t) bgR + colorDif > 255) ? 255 : bgR + (uint8_t) colorDif;
+		else
+				fgR = ((size_t) bgR - colorDif < 0) ? 0 : bgR - (uint8_t) colorDif;
+		// Green 
+		colorDif = (fgG - bgG) * float (fgA / 255);
+		if ((size_t) fgG -(size_t) bgG > 0)
+				fgG = ((size_t) bgG + colorDif > 255) ? 255 : bgG + (uint8_t) colorDif;
+		else
+				fgG = ((size_t) bgG - colorDif < 0) ? 0 : bgG - (uint8_t) colorDif;
+		// Blue
+		colorDif = (fgB - bgB) * float (fgA / 255);
+		if ((size_t) fgB - (size_t) bgB > 0)
+				fgB = ((size_t) bgB + colorDif > 255) ? 255 : bgB + (uint8_t) colorDif;
+		else
+				fgB = ((size_t) bgB - colorDif < 0) ? 0 : bgB - (uint8_t) colorDif;
+		return packColor (fgR, fgG, fgB);
+}
