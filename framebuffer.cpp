@@ -227,31 +227,7 @@ void FrameBuffer::drawTriangle (const int x1,
 				const int y3,
 				uint32_t color)
 {
-	// This assumes the points are in order I think
-	// And it doesn't fill it in
-	// And it doesn't mean that the shape is closed either
-	// This is just a shit show of a function... thanks stackoverflow
-	// Oh! and it draws a fucking rectangle
-	// https://stackoverflow.com/questions/25835468/draw-a-triangle-from-scratch-given-three-points
-	for (int fillX = x1; fillX <= x2; ++fillX)
-	{
-		for (int fillY = y1; fillY <= y2; ++fillY)
-		{
-			setPixel (fillX, fillY, color);
-		}
-	}
-	for (int fillX = x2; fillX <= x3; ++fillX)
-	{
-		for (int fillY = y2; fillY <= y3; ++fillY)
-		{
-			setPixel (fillX, fillY, color);
-		}
-	}
-	for (int fillX = x1; fillX <= x2; ++fillX)
-	{
-		for (int fillY = y1; fillY <= y2; ++fillY)
-		{
-			setPixel (fillX, fillY, color);
-		}
-	}
+		drawLine (x1, y1, x2, y2, color);
+		drawLine (x2, y2, x3, y3, color);
+		drawLine (x3, y3, x1, y1, color);
 }
