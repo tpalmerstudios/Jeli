@@ -1,3 +1,12 @@
+#include "render.h"
+
+#include "framebuffer.h"
+#include "map.h"
+#include "player.h"
+#include "sprite.h"
+#include "textures.h"
+#include "utils.h"
+
 #include <cassert>
 #include <cmath>
 #include <cstdint>
@@ -5,14 +14,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-
-#include "framebuffer.h"
-#include "map.h"
-#include "player.h"
-#include "sprite.h"
-#include "textures.h"
-#include "render.h"
-#include "utils.h"
 
 int wallXTexCoord (const float hitX, const float hitY, const Texture &texWalls);
 void render (FrameBuffer &fb,
@@ -42,7 +43,7 @@ uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor);
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
 	fb.drawRectangle (
-		0, 0, fb.w, gs.player.horizon, packColor (180, 180, 255));
+	0, 0, fb.w, gs.player.horizon, packColor (180, 180, 255));
 	// fb.drawTriangle (200, 200, 600, 400, 400, 800, packColor (255, 0,
 	// 0));
 }
@@ -52,11 +53,8 @@ void drawMap (const GameState &gs,
 	      const size_t cellW,
 	      const size_t cellH)
 {
-	fb.drawRectangle (0,
-			  0,
-			  cellW * gs.map.w,
-			  cellH * gs.map.h,
-			  packColor (170, 255, 170));
+	fb.drawRectangle (
+	0, 0, cellW * gs.map.w, cellH * gs.map.h, packColor (170, 255, 170));
 	for (size_t j = 0; j < gs.map.h; ++j)
 	{
 		for (size_t i = 0; i < gs.map.w; ++i)
@@ -65,11 +63,8 @@ void drawMap (const GameState &gs,
 				continue;
 			size_t rectX = i * cellW;
 			size_t rectY = j * cellH;
-			fb.drawRectangle (rectX,
-					  rectY,
-					  cellW,
-					  cellH,
-					  packColor (0, 0, 0));
+			fb.drawRectangle (
+			rectX, rectY, cellW, cellH, packColor (0, 0, 0));
 		} // draw the map (x)
 	}	  // draw the map (y)
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
@@ -137,18 +132,18 @@ void render (FrameBuffer &fb, const GameState &gs)
 			float dist	= t * cos (angle - gs.player.angle);
 			depthBuffer [i] = dist;
 			size_t columnHeight =
-				floor ((float) fb.h / (float) dist);
+			floor ((float) fb.h / (float) dist);
 			int xTexCoord = wallXTexCoord (x, y, gs.texWalls);
 			std::vector<uint32_t> column =
-				gs.texWalls.getScaledColumn (
-					texID, xTexCoord, columnHeight);
+			gs.texWalls.getScaledColumn (
+			texID, xTexCoord, columnHeight);
 			int pixX = i;
 			for (size_t j = 0; j < columnHeight; ++j)
 			{
 				// Origin of the columns... floor doesn't seem
 				// to do well
-				int pixY = j + gs.player.horizon -
-					   (columnHeight / 2);
+				int pixY =
+				j + gs.player.horizon - (columnHeight / 2);
 				if (pixY >= 0 && pixY < (int) fb.h)
 					fb.setPixel (pixX, pixY, column [j]);
 			}
@@ -157,11 +152,8 @@ void render (FrameBuffer &fb, const GameState &gs)
 	}	  // Ray sweeping fov
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
 	{
-		drawSprite (fb,
-			    gs.monsters [i],
-			    depthBuffer,
-			    gs.player,
-			    gs.texMonsters);
+		drawSprite (
+		fb, gs.monsters [i], depthBuffer, gs.player, gs.texMonsters);
 	} // Show sprites
 	drawMap (gs, fb, rectW, rectH);
 } // render ()
@@ -186,7 +178,7 @@ void mapPositionAngle (float x,
 			float fillX = x + (j * cos (nAngle));
 			float fillY = y + (j * sin (nAngle));
 			fb.drawRectangle (
-				fillX * rectW, fillY * rectH, 1, 1, color);
+			fillX * rectW, fillY * rectH, 1, 1, color);
 		} // draw line of angle
 	}	  // Go through angles
 }
@@ -205,7 +197,7 @@ void drawSprite (FrameBuffer &fb,
 		toSpriteAngle += 2 * M_PI;
 
 	size_t spriteDispSize =
-		std::min (1000, static_cast<int> (fb.h / sprite.playerDist));
+	std::min (1000, static_cast<int> (fb.h / sprite.playerDist));
 	// Adjust if removing displayed map
 	int offsetX = (toSpriteAngle - player.angle) * fb.w + (fb.w / 2) -
 		      texSprites.size / 2;
@@ -223,11 +215,11 @@ void drawSprite (FrameBuffer &fb,
 			    offsetY + loopY >= fb.h)
 				continue;
 			uint32_t fgColor = texSprites.get (
-				loopX * texSprites.size / spriteDispSize,
-				loopY * texSprites.size / spriteDispSize,
-				sprite.texID);
-			uint32_t bgColor = fb.img [(offsetX + loopX) +
-						   ((offsetY + loopY) * fb.w)];
+			loopX * texSprites.size / spriteDispSize,
+			loopY * texSprites.size / spriteDispSize,
+			sprite.texID);
+			uint32_t bgColor =
+			fb.img [(offsetX + loopX) + ((offsetY + loopY) * fb.w)];
 			fb.setPixel (offsetX + loopX,
 				     offsetY + loopY,
 				     overlay (bgColor, fgColor));
@@ -247,28 +239,28 @@ uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor)
 	size_t colorDif = (fgR - bgR) * float (fgA / 255);
 	if ((size_t) fgR - (size_t) bgR > 0)
 		fgR = ((size_t) bgR + colorDif > 255)
-			      ? 255
-			      : bgR + (uint8_t) colorDif;
+		      ? 255
+		      : bgR + (uint8_t) colorDif;
 	else
-		fgR = ((size_t) bgR - colorDif < 0) ? 0
-						    : bgR - (uint8_t) colorDif;
+		fgR =
+		((size_t) bgR - colorDif < 0) ? 0 : bgR - (uint8_t) colorDif;
 	// Green
 	colorDif = (fgG - bgG) * float (fgA / 255);
 	if ((size_t) fgG - (size_t) bgG > 0)
 		fgG = ((size_t) bgG + colorDif > 255)
-			      ? 255
-			      : bgG + (uint8_t) colorDif;
+		      ? 255
+		      : bgG + (uint8_t) colorDif;
 	else
-		fgG = ((size_t) bgG - colorDif < 0) ? 0
-						    : bgG - (uint8_t) colorDif;
+		fgG =
+		((size_t) bgG - colorDif < 0) ? 0 : bgG - (uint8_t) colorDif;
 	// Blue
 	colorDif = (fgB - bgB) * float (fgA / 255);
 	if ((size_t) fgB - (size_t) bgB > 0)
 		fgB = ((size_t) bgB + colorDif > 255)
-			      ? 255
-			      : bgB + (uint8_t) colorDif;
+		      ? 255
+		      : bgB + (uint8_t) colorDif;
 	else
-		fgB = ((size_t) bgB - colorDif < 0) ? 0
-						    : bgB - (uint8_t) colorDif;
+		fgB =
+		((size_t) bgB - colorDif < 0) ? 0 : bgB - (uint8_t) colorDif;
 	return packColor (fgR, fgG, fgB);
 }

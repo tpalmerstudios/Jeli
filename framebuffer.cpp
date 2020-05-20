@@ -1,11 +1,12 @@
+#include "framebuffer.h"
+
+#include "utils.h"
+
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <vector>
-
-#include "framebuffer.h"
-#include "utils.h"
 
 // Place a single pixel in the current frame
 void FrameBuffer::setPixel (const size_t iX,
