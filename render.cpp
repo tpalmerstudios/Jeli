@@ -24,10 +24,8 @@ uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor);
 
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
-		//fb.drawRectangle (0, 0, fb.w, gs.player.horizon, packColor (180, 180, 255));
-		fb.drawRectangle (0, 0, fb.w, fb.h, packColor (255, 255, 255));
+		fb.drawRectangle (0, 0, fb.w, gs.player.horizon, packColor (180, 180, 255));
 		//fb.drawTriangle (200, 200, 600, 400, 400, 800, packColor (255, 0, 0));
-		fb.drawCircle (-50, 300, 100, packColor (0, 100, 100));
 }
 
 void drawMap (const GameState &gs, FrameBuffer &fb, const size_t cellW, const size_t cellH)
@@ -71,7 +69,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 		const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
 		const size_t rectH = (fb.h / 3) / gs.map.h; // set height of rectangle 
 		// The sky!
-		//drawSky (gs, fb);
+		drawSky (gs, fb);
 		// The grass
 		fb.drawRectangle (0, gs.player.horizon, fb.w, fb.h - gs.player.horizon, packColor(70, 255, 70));
 
@@ -112,7 +110,6 @@ void render (FrameBuffer &fb, const GameState &gs)
 				drawSprite (fb, gs.monsters [i], depthBuffer, gs.player, gs.texMonsters);
 		} // Show sprites
 		drawMap (gs, fb, rectW, rectH);
-		drawSky (gs, fb);
 } //render ()
 
 void mapPositionAngle (float x, float y, float angle, const Map &map, FrameBuffer &fb, const uint32_t color)
