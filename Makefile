@@ -11,7 +11,7 @@ HEADERS = framebuffer.h map.h player.h sprite.h textures.h tinyraycaster.h utils
 .cpp:
 	$(CXX) $(CXXFLAGS) $@.cpp $(SDL2CFLAGS) $(SDL2LIBS) -o $@
 
-fps: $(OBJECTS) $(HEADERS)
+jeli: $(OBJECTS) $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) $(SDL2CFLAGS) $(SDL2LIBS) -o $@
 
 clean:
