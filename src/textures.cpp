@@ -4,7 +4,7 @@
 #include <vector>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+#include "stb_image.h"
 #include "textures.h"
 #include "utils.h"
 
