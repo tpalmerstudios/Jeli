@@ -105,11 +105,19 @@ int wallXTexCoord (const float hitX, const float hitY, const Texture &texWalls)
 
 void render (FrameBuffer &fb, const GameState &gs)
 {
-	fb.clear (packColor (255, 255, 255));	    // clear screen
-	const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
-	const size_t rectH = (fb.h / 3) / gs.map.h; // set height of rectangle
+	fb.clear (packColor (255, 255, 255)); // clear screen
+	fb.drawLine (0, 0, 200, 200, packColor (255, 0, 0));
+	fb.drawLine (700, 100, 480, 800, packColor (0, 255, 0));
+	fb.drawLine (250, 685, 900, 273, packColor (0, 0, 255));
+	fb.drawLine (876, 510, 1100, 3, packColor (255, 255, 0));
+	fb.drawLine (1100, 200, -85, 500, packColor (0, 255, 255));
+	// Broken----^
+	fb.drawLine (-200, 85, 360, 185, packColor (255, 0, 255));
+	// const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
+	// const size_t rectH = (fb.h / 3) / gs.map.h; // set height of
+	// rectangle
 	// The sky!
-	drawSky (gs, fb);
+	/*drawSky (gs, fb);
 	// The grass
 	fb.drawRectangle (0,
 			  gs.player.horizon,
@@ -165,6 +173,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 			    gs.texMonsters);
 	} // Show sprites
 	drawMap (gs, fb, rectW, rectH);
+	*/
 } // render ()
 
 void mapPositionAngle (float x,

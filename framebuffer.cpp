@@ -61,37 +61,42 @@ void FrameBuffer::drawLine (const int x1,
 	{
 		if (x1 > x2)
 		{
-			// plotLineHigh (x2, y2 first)
-			size_t dx = x1 - x2; // Delta X (Will be positive)
-			int dy	  = y1 - y2; // Delta Y
-			int xMove = 1;	     // is x moving left or right
-			int diff  = 2 * dx - dy;
-			int fillX = x2;
-
-			for (int fillY = y2; fillY < y1; ++fillY)
-			{
-				setPixel (fillX, fillY, color);
-				if (diff > 0)
-				{
-					fillX += xMove;
-					diff -= 2 * dy;
-				}
-				diff += 2 * dx;
-			}
-		}
-		else
-		{
 			// plotLineLow
-			int dx	  = x2 - x1; // Delta X (Will be negative)
-			int dy	  = y2 - y1; // Delta Y
+			int dx = x1 - x2; // Delta X
+			int dy = y1 - y2; // Delta Y
 			int yMove = 1;
-			int diff  = 2 * dy - dx;
-			int fillY = y1;
 			if (dy < 0)
 			{
 				yMove = -1;
 				dy    = -dy;
 			}
+			int diff  = 2 * dy - dx;
+			int fillY = y2;
+
+			for (int fillX = x2; fillX < x1; ++fillX)
+			{
+				setPixel (fillX, fillY, color);
+				if (diff > 0)
+				{
+					fillY += yMove;
+					diff -= 2 * dx;
+				}
+				diff += 2 * dy;
+			}
+		}
+		else
+		{
+			// plotLineLow
+			int dx = x2 - x1; // Delta X
+			int dy = y2 - y1; // Delta Y
+			int yMove = 1;
+			if (dy < 0)
+			{
+				yMove = -1;
+				dy    = -dy;
+			}
+			int diff  = 2 * dy - dx;
+			int fillY = y1;
 
 			for (int fillX = x1; fillX < x2; ++fillX)
 			{
@@ -109,17 +114,18 @@ void FrameBuffer::drawLine (const int x1,
 	{
 		if (y1 > y2)
 		{
-			// plot line high (coord revers)
+			// plotline high
 			int dx	  = x1 - x2; // Delta X
-			int dy	  = y1 - y2; // Delta Y (Always positive)
+			int dy	  = y1 - y2; // Delta Y 
 			int xMove = 1;
-			int diff  = 2 * dx - dy;
-			int fillX = x2;
 			if (dx < 0)
 			{
-				xMove = -1;
-				dx    = -dx;
+					xMove = -1;
+					dx = -dx;
 			}
+			int diff  = 2 * dx - dy;
+			int fillX = x2;
+
 			for (int fillY = y2; fillY < y1; ++fillY)
 			{
 				setPixel (fillX, fillY, color);
@@ -135,15 +141,15 @@ void FrameBuffer::drawLine (const int x1,
 		{
 			// plotline high
 			int dx	  = x2 - x1; // Delta X
-			int dy	  = y2 - y1; // Delta Y (Always negative)
+			int dy	  = y2 - y1; // Delta Y
 			int xMove = 1;
-			int diff  = 2 * dx - dy;
-			int fillX = x1;
 			if (dx < 0)
 			{
-				xMove = -1;
-				dx    = -dx;
+					xMove = -1;
+					dx = -dx;
 			}
+			int diff  = 2 * dx - dy;
+			int fillX = x1;
 
 			for (int fillY = y1; fillY < y2; ++fillY)
 			{
@@ -183,6 +189,11 @@ void FrameBuffer::drawCircle (const int x,
 				sY += 2;
 				determinant += sY;
 			}
+			// On wikipedia I saw a circle with gaps in it, it was
+			// discussing this algorithm, and several articles I
+			// read about this algorithm have it wrong.... This next
+			// block should be in an else block. Otherwise you'll
+			// have to deal with it as I did
 			else
 			{
 				offX++;
