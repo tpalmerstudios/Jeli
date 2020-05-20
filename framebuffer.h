@@ -1,8 +1,8 @@
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
-
 #include <cstdlib>
 #include <vector>
+
+#ifndef FRAMEBUFFER_H
+#define FRAMEBUFFER_H
 
 struct FrameBuffer
 {
@@ -27,6 +27,11 @@ struct FrameBuffer
 			 const int y,
 			 const size_t radius,
 			 const uint32_t color);
+	void drawLine (const int x1,
+		       const int y1,
+		       const int x2,
+		       const int y2,
+		       const uint32_t color);
 	bool isPixel (const int x, const int y) const;
 };
 

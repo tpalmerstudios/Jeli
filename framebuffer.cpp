@@ -1,13 +1,11 @@
-#include "framebuffer.h"
-
-#include "utils.h"
-
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <vector>
 
+#include "framebuffer.h"
+#include "utils.h"
 // Place a single pixel in the current frame
 void FrameBuffer::setPixel (const size_t iX,
 			    const size_t iY,
@@ -49,6 +47,116 @@ void FrameBuffer::drawRectangle (const size_t rectX,
 void FrameBuffer::clear (const uint32_t color)
 {
 	img = std::vector<uint32_t> (w * h, color);
+}
+
+// Based on Bresenham's Line Algorithm (integer)
+// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+void FrameBuffer::drawLine (const int x1,
+			    const int y1,
+			    const int x2,
+			    const int y2,
+			    const uint32_t color)
+{
+	if (abs (y2 - y1) < abs (x2 - x1))
+	{
+		if (x1 > x2)
+		{
+			// plotLineHigh (x2, y2 first)
+			size_t dx = x1 - x2; // Delta X (Will be positive)
+			int dy	  = y1 - y2; // Delta Y
+			int xMove = 1;	     // is x moving left or right
+			int diff  = 2 * dx - dy;
+			int fillX = x2;
+
+			for (int fillY = y2; fillY < y1; ++fillY)
+			{
+				setPixel (fillX, fillY, color);
+				if (diff > 0)
+				{
+					fillX += xMove;
+					diff -= 2 * dy;
+				}
+				diff += 2 * dx;
+			}
+		}
+		else
+		{
+			// plotLineLow
+			int dx	  = x2 - x1; // Delta X (Will be negative)
+			int dy	  = y2 - y1; // Delta Y
+			int yMove = 1;
+			int diff  = 2 * dy - dx;
+			int fillY = y1;
+			if (dy < 0)
+			{
+				yMove = -1;
+				dy    = -dy;
+			}
+
+			for (int fillX = x1; fillX < x2; ++fillX)
+			{
+				setPixel (fillX, fillY, color);
+				if (diff > 0)
+				{
+					fillY += yMove;
+					diff -= 2 * dx;
+				}
+				diff += 2 * dy;
+			}
+		}
+	}
+	else
+	{
+		if (y1 > y2)
+		{
+			// plot line high (coord revers)
+			int dx	  = x1 - x2; // Delta X
+			int dy	  = y1 - y2; // Delta Y (Always positive)
+			int xMove = 1;
+			int diff  = 2 * dx - dy;
+			int fillX = x2;
+			if (dx < 0)
+			{
+				xMove = -1;
+				dx    = -dx;
+			}
+			for (int fillY = y2; fillY < y1; ++fillY)
+			{
+				setPixel (fillX, fillY, color);
+				if (diff > 0)
+				{
+					fillX += xMove;
+					diff -= 2 * dy;
+				}
+				diff += 2 * dx;
+			}
+		}
+		else
+		{
+			// plotline high
+			int dx	  = x2 - x1; // Delta X
+			int dy	  = y2 - y1; // Delta Y (Always negative)
+			int xMove = 1;
+			int diff  = 2 * dx - dy;
+			int fillX = x1;
+			if (dx < 0)
+			{
+				xMove = -1;
+				dx    = -dx;
+			}
+
+			for (int fillY = y1; fillY < y2; ++fillY)
+			{
+				setPixel (fillX, fillY, color);
+				if (diff > 0)
+				{
+					fillX += xMove;
+					diff -= 2 * dy;
+				}
+				diff += 2 * dx;
+			}
+		}
+	}
 }
 
 void FrameBuffer::drawCircle (const int x,

@@ -1,5 +1,5 @@
-#ifndef TINYRAYCASTER_H
-#define TINYRAYCASTER_H
+#ifndef RENDER_H
+#define RENDER_H
 
 struct GameState
 {
@@ -11,5 +11,5 @@ struct GameState
 }; // gamestate
 void render (FrameBuffer &fb, const GameState &gs);
 
-#endif // TINYRAYCASTER_H
+#endif // RENDER_H
 
