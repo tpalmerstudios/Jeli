@@ -5,11 +5,11 @@
 
 struct Map
 {
-		size_t w, h;
-		Map ();
-		int get (const size_t iX, const size_t iY) const;
-		bool isEmpty (const size_t iX, const size_t iY) const;
+	size_t w, h;
+	Map ();
+	int get (const size_t iX, const size_t iY) const;
+	bool isEmpty (const size_t iX, const size_t iY) const;
 };
 
-#endif //MAP_H
+#endif // MAP_H
 

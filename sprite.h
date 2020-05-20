@@ -5,10 +5,10 @@
 
 struct Sprite
 {
-		float x, y;
-		size_t texID;
-		float playerDist;
-		bool operator < (const Sprite& s) const;
+	float x, y;
+	size_t texID;
+	float playerDist;
+	bool operator< (const Sprite &s) const;
 };
 
 #endif // SPRITE_H

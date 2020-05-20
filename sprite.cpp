@@ -1,8 +1,9 @@
-#include <cstdlib>
 #include "sprite.h"
 
-bool Sprite::operator < (const Sprite& s) const
+#include <cstdlib>
+
+bool Sprite::operator< (const Sprite &s) const
 {
-		return playerDist > s.playerDist;
+	return playerDist > s.playerDist;
 }
 
