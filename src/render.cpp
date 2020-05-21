@@ -85,11 +85,13 @@ void drawMap (const GameState &gs,
 	}	  // draw the map (y)
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
 	{
-		fb.drawRectangle (gs.monsters [i].x * cellW - cellW / 2,
-				  gs.monsters [i].y * cellH - cellH / 2,
-				  cellW / 2,
-				  cellH / 2,
-				  packColor (255, 0, 0));
+			Rectangle obj;
+			obj.setLeft (gs.monsters [i].x * cellW - cellW / 2);
+			obj.setTop (gs.monsters [i].y * cellH - cellH / 2);
+			obj.setRight (gs.monsters [i].x * cellW);
+			obj.setBottom (gs.monsters [i].y * cellH);
+			obj.setColor (packColor (255, 0, 0));
+		fb.drawRectangle (obj);
 	} // show monsters / sprites
 	mapPositionAngle (gs.player.x,
 			  gs.player.y,
@@ -126,11 +128,13 @@ void render (FrameBuffer &fb, const GameState &gs)
 	// The sky!
 	drawSky (gs, fb);
 	// The grass
-	fb.drawRectangle (0,
-			  gs.player.horizon,
-			  fb.w,
-			  fb.h - gs.player.horizon,
-			  packColor (70, 255, 70));
+	Rectangle grass;
+	grass.setLeft (0);
+	grass.setTop (gs.player.horizon);
+	grass.setRight (fb.w);
+	grass.setBottom (fb.h);
+	grass.setColor (packColor (70, 255, 70));
+	fb.drawRectangle (grass);
 
 	std::vector<float> depthBuffer (fb.w, 1e3);
 	for (size_t i = 0; i < fb.w; ++i)
@@ -201,8 +205,7 @@ void mapPositionAngle (float x,
 		{
 			float fillX = x + (j * cos (nAngle));
 			float fillY = y + (j * sin (nAngle));
-			fb.drawRectangle (
-				fillX * rectW, fillY * rectH, 1, 1, color);
+			fb.setPixel (fillX * rectW, fillY * rectH, color);
 		} // draw line of angle
 	}	  // Go through angles
 }
