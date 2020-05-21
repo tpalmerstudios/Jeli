@@ -46,15 +46,15 @@ class Rectangle
 	uint32_t getColor () { return color; }
 	void setColor (uint32_t rgba) { color = rgba; }
 
-	int getLeft ();
-	int getTop ();
-	int getRight ();
-	int getBottom ();
+	int getAX ();
+	int getAY ();
+	int getBX ();
+	int getBY ();
 
-	void setLeft (int setX) { origin.setX (setX); }
-	void setTop (int setY) { origin.setY (setY); }
-	void setRight (int setX) { end.setX (setX); }
-	void setBottom (int setY) { end.setY (setY); }
+	void setAX (int setX) { origin.setX (setX); }
+	void setAY (int setY) { origin.setY (setY); }
+	void setBX (int setX) { end.setX (setX); }
+	void setBY (int setY) { end.setY (setY); }
 };
 
 class Polygon
@@ -74,6 +74,28 @@ class Polygon
 	float largestX ();
 	float smallestY ();
 	float largestY ();
+};
+
+class Line
+{
+    private:
+	Point origin;
+	Point end;
+	uint32_t color;
+
+    public:
+	uint32_t getColor () { return color; }
+	void setColor (uint32_t rgba) { color = rgba; }
+
+	int getAX () { return origin.getX (); }
+	int getAY () { return origin.getY (); }
+	int getBX () { return end.getX (); }
+	int getBY () { return end.getY (); }
+
+	void setAX (int setX) { origin.setX (setX); }
+	void setAY (int setY) { origin.setY (setY); }
+	void setBX (int setX) { end.setX (setX); }
+	void setBY (int setY) { end.setY (setY); }
 };
 
 #endif // GEO_PRIMS_H

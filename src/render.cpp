@@ -44,10 +44,10 @@ uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor);
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
 	Rectangle rect;
-	rect.setLeft (0);
-	rect.setTop (0);
-	rect.setRight (fb.w);
-	rect.setBottom (gs.player.horizon);
+	rect.setAX (0);
+	rect.setAY (0);
+	rect.setBX (fb.w);
+	rect.setBY (gs.player.horizon);
 	rect.setColor (packColor (180, 180, 255));
 	fb.drawRectangle (rect);
 	// fb.drawTriangle (200, 200, 600, 400, 400, 800, packColor (255, 0,
@@ -60,10 +60,10 @@ void drawMap (const GameState &gs,
 	      const size_t cellH)
 {
 	Rectangle mapSquare;
-	mapSquare.setLeft (0);
-	mapSquare.setTop (0);
-	mapSquare.setRight (cellW * gs.map.w);
-	mapSquare.setBottom (cellH * gs.map.h);
+	mapSquare.setAX (0);
+	mapSquare.setAY (0);
+	mapSquare.setBX (cellW * gs.map.w);
+	mapSquare.setBY (cellH * gs.map.h);
 	mapSquare.setColor (packColor (170, 255, 170));
 	fb.drawRectangle (mapSquare);
 	for (size_t j = 0; j < gs.map.h; ++j)
@@ -75,10 +75,10 @@ void drawMap (const GameState &gs,
 			size_t rectX = i * cellW;
 			size_t rectY = j * cellH;
 	Rectangle wall;
-	wall.setLeft (rectX);
-	wall.setTop (rectY);
-	wall.setRight (rectX + cellW);
-	wall.setBottom (rectY + cellH);
+	wall.setAX (rectX);
+	wall.setAY (rectY);
+	wall.setBX (rectX + cellW);
+	wall.setBY (rectY + cellH);
 	wall.setColor (packColor (0, 0, 0));
 	fb.drawRectangle (wall);
 		} // draw the map (x)
@@ -86,10 +86,10 @@ void drawMap (const GameState &gs,
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
 	{
 			Rectangle obj;
-			obj.setLeft (gs.monsters [i].x * cellW - cellW / 2);
-			obj.setTop (gs.monsters [i].y * cellH - cellH / 2);
-			obj.setRight (gs.monsters [i].x * cellW);
-			obj.setBottom (gs.monsters [i].y * cellH);
+			obj.setAX (gs.monsters [i].x * cellW - cellW / 2);
+			obj.setAY (gs.monsters [i].y * cellH - cellH / 2);
+			obj.setBX (gs.monsters [i].x * cellW);
+			obj.setBY (gs.monsters [i].y * cellH);
 			obj.setColor (packColor (255, 0, 0));
 		fb.drawRectangle (obj);
 	} // show monsters / sprites
@@ -129,10 +129,10 @@ void render (FrameBuffer &fb, const GameState &gs)
 	drawSky (gs, fb);
 	// The grass
 	Rectangle grass;
-	grass.setLeft (0);
-	grass.setTop (gs.player.horizon);
-	grass.setRight (fb.w);
-	grass.setBottom (fb.h);
+	grass.setAX (0);
+	grass.setAY (gs.player.horizon);
+	grass.setBX (fb.w);
+	grass.setBY (fb.h);
 	grass.setColor (packColor (70, 255, 70));
 	fb.drawRectangle (grass);
 

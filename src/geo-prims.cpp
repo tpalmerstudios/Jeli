@@ -3,19 +3,19 @@
 
 #include <geo-prims.h>
 
-int Rectangle::getLeft ()
+int Rectangle::getAX ()
 {
 	return (origin.getX () < end.getX ()) ? origin.getX () : end.getX ();
 }
-int Rectangle::getTop ()
+int Rectangle::getAY ()
 {
 	return (origin.getY () < end.getY ()) ? origin.getY () : end.getY ();
 }
-int Rectangle::getRight ()
+int Rectangle::getBX ()
 {
 	return (end.getX () > origin.getX ()) ? end.getX () : origin.getX ();
 }
-int Rectangle::getBottom ()
+int Rectangle::getBY ()
 {
 	return (end.getY () > origin.getY ()) ? end.getY () : origin.getY ();
 }

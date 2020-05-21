@@ -23,11 +23,7 @@ struct FrameBuffer
 			   const int y3,
 			   const uint32_t color);
 	void drawCircle (Circle circle);
-	void drawLine (const int x1,
-		       const int y1,
-		       const int x2,
-		       const int y2,
-		       const uint32_t color);
+	void drawLine (Line line);
 	void drawPolygon (Polygon poly);
 	bool isPixel (const int x, const int y) const;
 };

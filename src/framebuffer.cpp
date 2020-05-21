@@ -28,11 +28,11 @@ bool FrameBuffer::isPixel (const int x, const int y) const
 void FrameBuffer::drawRectangle (Rectangle rect)
 {
 	assert (img.size () == (w * h));
-	size_t rw      = rect.getRight () - rect.getLeft ();
-	size_t rh      = rect.getBottom () - rect.getTop ();
+	size_t rw      = rect.getBX () - rect.getAX ();
+	size_t rh      = rect.getBY () - rect.getAY ();
 	uint32_t color = rect.getColor ();
-	int x	       = rect.getLeft ();
-	int y	       = rect.getTop ();
+	int x	       = rect.getAX ();
+	int y	       = rect.getAY ();
 	for (size_t i = 0; i < rw; ++i)
 	{
 		for (size_t j = 0; j < rh; ++j)
@@ -48,12 +48,15 @@ void FrameBuffer::clear (const uint32_t color)
 
 // Based on Bresenham's Line Algorithm (integer)
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-void FrameBuffer::drawLine (const int x1,
-			    const int y1,
-			    const int x2,
-			    const int y2,
-			    const uint32_t color)
+void FrameBuffer::drawLine (Line line)
 {
+	// Cant find definition? Its in geo-prims.h
+	//
+	int x1	       = line.getAX ();
+	int x2	       = line.getBX ();
+	int y1	       = line.getAY ();
+	int y2	       = line.getBY ();
+	uint32_t color = line.getColor ();
 	if (abs (y2 - y1) < abs (x2 - x1))
 	{
 		if (x1 > x2)
@@ -223,9 +226,9 @@ void FrameBuffer::drawTriangle (const int x1,
 				const int y3,
 				uint32_t color)
 {
-	drawLine (x1, y1, x2, y2, color);
+	/*drawLine (x1, y1, x2, y2, color);
 	drawLine (x2, y2, x3, y3, color);
-	drawLine (x3, y3, x1, y1, color);
+	drawLine (x3, y3, x1, y1, color);*/
 }
 // add a polygon structure with vertex vector and a count of vertex and find the
 // smallest and largest of x and y
