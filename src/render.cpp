@@ -46,7 +46,7 @@ void drawSky (const GameState &gs, FrameBuffer &fb)
 	Rectangle rect;
 	rect.setAX (0);
 	rect.setAY (0);
-	rect.setBX (fb.w);
+	rect.setBX (fb.getW ());
 	rect.setBY (gs.player.horizon);
 	rect.setColor (packColor (180, 180, 255));
 	fb.drawRectangle (rect);
@@ -74,23 +74,23 @@ void drawMap (const GameState &gs,
 				continue;
 			size_t rectX = i * cellW;
 			size_t rectY = j * cellH;
-	Rectangle wall;
-	wall.setAX (rectX);
-	wall.setAY (rectY);
-	wall.setBX (rectX + cellW);
-	wall.setBY (rectY + cellH);
-	wall.setColor (packColor (0, 0, 0));
-	fb.drawRectangle (wall);
+			Rectangle wall;
+			wall.setAX (rectX);
+			wall.setAY (rectY);
+			wall.setBX (rectX + cellW);
+			wall.setBY (rectY + cellH);
+			wall.setColor (packColor (0, 0, 0));
+			fb.drawRectangle (wall);
 		} // draw the map (x)
 	}	  // draw the map (y)
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
 	{
-			Rectangle obj;
-			obj.setAX (gs.monsters [i].x * cellW - cellW / 2);
-			obj.setAY (gs.monsters [i].y * cellH - cellH / 2);
-			obj.setBX (gs.monsters [i].x * cellW);
-			obj.setBY (gs.monsters [i].y * cellH);
-			obj.setColor (packColor (255, 0, 0));
+		Rectangle obj;
+		obj.setAX (gs.monsters [i].x * cellW - cellW / 2);
+		obj.setAY (gs.monsters [i].y * cellH - cellH / 2);
+		obj.setBX (gs.monsters [i].x * cellW);
+		obj.setBY (gs.monsters [i].y * cellH);
+		obj.setColor (packColor (255, 0, 0));
 		fb.drawRectangle (obj);
 	} // show monsters / sprites
 	mapPositionAngle (gs.player.x,
@@ -122,8 +122,9 @@ void render (FrameBuffer &fb, const GameState &gs)
 	430}; Polygon poly; poly.setColor (packColor (0, 0, 255)); if
 	(poly.setVertexes(coords) != int (coords.size ())) std::cout << " You
 	fucked up!\n"; fb.drawPolygon (poly);*/
-	const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
-	const size_t rectH = (fb.h / 3) / gs.map.h; // set height of
+	const size_t rectW =
+		(fb.getW () / 4) / gs.map.w; // set width of rectangle
+	const size_t rectH = (fb.getH () / 3) / gs.map.h; // set height of
 	// rectangle
 	// The sky!
 	drawSky (gs, fb);
@@ -131,19 +132,19 @@ void render (FrameBuffer &fb, const GameState &gs)
 	Rectangle grass;
 	grass.setAX (0);
 	grass.setAY (gs.player.horizon);
-	grass.setBX (fb.w);
-	grass.setBY (fb.h);
+	grass.setBX (fb.getW ());
+	grass.setBY (fb.getH ());
 	grass.setColor (packColor (70, 255, 70));
 	fb.drawRectangle (grass);
 
-	std::vector<float> depthBuffer (fb.w, 1e3);
-	for (size_t i = 0; i < fb.w; ++i)
+	std::vector<float> depthBuffer (fb.getW (), 1e3);
+	for (size_t i = 0; i < fb.getW (); ++i)
 	{
 		// Actual ray casting starting with left side.
 		// Actual math is basing this off of angle minus
 		// half the field of view plus the current ray angle
 		float angle = gs.player.angle - (gs.player.fov / 2) +
-			      (gs.player.fov * i) / float (fb.w);
+			      (gs.player.fov * i) / float (fb.getW ());
 		for (float t = 0; t < 15; t += 0.014)
 		{
 			float x = gs.player.x + (t * cos (angle));
@@ -157,7 +158,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 			float dist	= t * cos (angle - gs.player.angle);
 			depthBuffer [i] = dist;
 			size_t columnHeight =
-				floor ((float) fb.h / (float) dist);
+				floor ((float) fb.getH () / (float) dist);
 			int xTexCoord = wallXTexCoord (x, y, gs.texWalls);
 			std::vector<uint32_t> column =
 				gs.texWalls.getScaledColumn (
@@ -169,7 +170,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 				// to do well
 				int pixY = j + gs.player.horizon -
 					   (columnHeight / 2);
-				if (pixY >= 0 && pixY < (int) fb.h)
+				if (pixY >= 0 && pixY < (int) fb.getH ())
 					fb.setPixel (pixX, pixY, column [j]);
 			}
 			break;
@@ -193,8 +194,8 @@ void mapPositionAngle (float x,
 		       FrameBuffer &fb,
 		       const uint32_t color)
 {
-	const size_t rectW = (fb.w / 4) / map.w;
-	const size_t rectH = (fb.h / 3) / map.h;
+	const size_t rectW = (fb.getW () / 4) / map.w;
+	const size_t rectH = (fb.getH () / 3) / map.h;
 	float loop	   = 0;
 	for (float nAngle = (angle - M_PI) - (M_PI / 8);
 	     nAngle <= (angle - M_PI) + (M_PI / 6);
@@ -223,30 +224,30 @@ void drawSprite (FrameBuffer &fb,
 	while (toSpriteAngle - player.angle < -M_PI)
 		toSpriteAngle += 2 * M_PI;
 
-	size_t spriteDispSize =
-		std::min (1000, static_cast<int> (fb.h / sprite.playerDist));
+	size_t spriteDispSize = std::min (
+		1000, static_cast<int> (fb.getH () / sprite.playerDist));
 	// Adjust if removing displayed map
-	int offsetX = (toSpriteAngle - player.angle) * fb.w + (fb.w / 2) -
-		      texSprites.size / 2;
+	int offsetX = (toSpriteAngle - player.angle) * fb.getW () +
+		      (fb.getW () / 2) - texSprites.size / 2;
 	int offsetY = player.horizon - (spriteDispSize / 2);
 
 	for (size_t loopX = 0; loopX < spriteDispSize; ++loopX)
 	{
-		if (offsetX + int (loopX) < 0 || offsetX + loopX >= fb.w)
+		if (offsetX + int (loopX) < 0 || offsetX + loopX >= fb.getW ())
 			continue;
 		if (depthBuffer [offsetX + loopX] < sprite.playerDist)
 			continue;
 		for (size_t loopY = 0; loopY < spriteDispSize; ++loopY)
 		{
 			if (offsetY + int (loopY) < 0 ||
-			    offsetY + loopY >= fb.h)
+			    offsetY + loopY >= fb.getH ())
 				continue;
 			uint32_t fgColor = texSprites.get (
 				loopX * texSprites.size / spriteDispSize,
 				loopY * texSprites.size / spriteDispSize,
 				sprite.texID);
-			uint32_t bgColor = fb.img [(offsetX + loopX) +
-						   ((offsetY + loopY) * fb.w)];
+			uint32_t bgColor =
+				fb.getPixel (offsetX + loopX, offsetY + loopY);
 			fb.setPixel (offsetX + loopX,
 				     offsetY + loopY,
 				     overlay (bgColor, fgColor));

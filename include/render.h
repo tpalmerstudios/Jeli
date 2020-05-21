@@ -1,3 +1,11 @@
+#include <vector>
+
+#include "framebuffer.h"
+#include "map.h"
+#include "player.h"
+#include "sprite.h"
+#include "textures.h"
+
 #ifndef RENDER_H
 #define RENDER_H
 

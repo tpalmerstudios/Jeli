@@ -17,6 +17,14 @@ void FrameBuffer::setPixel (const size_t iX,
 	if (isPixel (int (iX), int (iY)))
 		img [iX + (iY * w)] = color;
 }
+uint32_t FrameBuffer::getPixel (const size_t x, const size_t y)
+{
+		assert (img.size () == (w * h));
+		if (x < w && y < h)
+				return img [x + (y * w)];
+		else
+				return packColor (255, 255, 255);
+}
 
 bool FrameBuffer::isPixel (const int x, const int y) const
 {

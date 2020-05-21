@@ -6,25 +6,27 @@
 #include "framebuffer.h"
 #include "map.h"
 #include "player.h"
+#include "render.h"
 #include "sprite.h"
 #include "textures.h"
-#include "render.h"
 #include "utils.h"
 
 int main ()
 {
-	FrameBuffer fb{
-		1024,
-		512,
-		std::vector<uint32_t> (1024 * 512, packColor (255, 255, 255))};
-	GameState gs{Map (),
-		     {3.456, 2.345, 1.523, M_PI / 3., 0, 0, fb.h / 2},
-		     {{3.523, 3.812, 2, 0},
-		      {1.834, 8.765, 0, 0},
-		      {5.323, 5.365, 1, 0},
-		      {4.123, 10.76, 1, 0}},
-		     Texture ("media/wallText-2.png"),
-		     Texture ("media/monsters.png")};
+	FrameBuffer fb;
+	fb.setW (1024);
+	fb.setH (512);
+	fb.img = std::vector<uint32_t> (fb.getW () * fb.getH (),
+					packColor (255, 255, 255));
+	GameState gs{
+		Map (),
+		{3.456, 2.345, 1.523, M_PI / 3., 0, 0, int (fb.getH ()) / 2},
+		{{3.523, 3.812, 2, 0},
+		 {1.834, 8.765, 0, 0},
+		 {5.323, 5.365, 1, 0},
+		 {4.123, 10.76, 1, 0}},
+		Texture ("media/wallText-2.png"),
+		Texture ("media/monsters.png")};
 	if (!gs.texWalls.count || !gs.texMonsters.count)
 	{
 		std::cerr << "Failed to load textures\n";
@@ -39,8 +41,8 @@ int main ()
 			  << std::endl;
 		return -1;
 	}
-	if (SDL_CreateWindowAndRenderer (fb.w,
-					 fb.h,
+	if (SDL_CreateWindowAndRenderer (fb.getW (),
+					 fb.getH (),
 					 SDL_WINDOW_SHOWN |
 						 SDL_WINDOW_INPUT_FOCUS,
 					 &window,
@@ -55,8 +57,8 @@ int main ()
 		SDL_CreateTexture (renderer,
 				   SDL_PIXELFORMAT_ABGR8888,
 				   SDL_TEXTUREACCESS_STREAMING,
-				   fb.w,
-				   fb.h);
+				   fb.getW (),
+				   fb.getH ());
 	SDL_Event event;
 	while (1)
 	{
@@ -69,7 +71,10 @@ int main ()
 				break;
 			if (event.key.keysym.sym == 'p')
 			{
-				dropPPMImage ("frame.ppm", fb.img, fb.w, fb.h);
+				dropPPMImage ("frame.ppm",
+					      fb.getImg (),
+					      fb.getW (),
+					      fb.getH ());
 			}
 			if (event.type == SDL_KEYUP)
 			{
@@ -131,7 +136,7 @@ int main ()
 		SDL_UpdateTexture (frameBufferTexture,
 				   NULL,
 				   reinterpret_cast<void *> (fb.img.data ()),
-				   fb.w * 4);
+				   fb.getW () * 4);
 		SDL_RenderClear (renderer);
 		SDL_RenderCopy (renderer, frameBufferTexture, NULL, NULL);
 		SDL_RenderPresent (renderer);
