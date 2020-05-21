@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "framebuffer.h"
+#include "geo-prims.h"
 #include "utils.h"
 // Place a single pixel in the current frame
 void FrameBuffer::setPixel (const size_t iX,
@@ -62,8 +63,8 @@ void FrameBuffer::drawLine (const int x1,
 		if (x1 > x2)
 		{
 			// plotLineLow
-			int dx = x1 - x2; // Delta X
-			int dy = y1 - y2; // Delta Y
+			int dx	  = x1 - x2; // Delta X
+			int dy	  = y1 - y2; // Delta Y
 			int yMove = 1;
 			if (dy < 0)
 			{
@@ -87,8 +88,8 @@ void FrameBuffer::drawLine (const int x1,
 		else
 		{
 			// plotLineLow
-			int dx = x2 - x1; // Delta X
-			int dy = y2 - y1; // Delta Y
+			int dx	  = x2 - x1; // Delta X
+			int dy	  = y2 - y1; // Delta Y
 			int yMove = 1;
 			if (dy < 0)
 			{
@@ -116,12 +117,12 @@ void FrameBuffer::drawLine (const int x1,
 		{
 			// plotline high
 			int dx	  = x1 - x2; // Delta X
-			int dy	  = y1 - y2; // Delta Y 
+			int dy	  = y1 - y2; // Delta Y
 			int xMove = 1;
 			if (dx < 0)
 			{
-					xMove = -1;
-					dx = -dx;
+				xMove = -1;
+				dx    = -dx;
 			}
 			int diff  = 2 * dx - dy;
 			int fillX = x2;
@@ -145,8 +146,8 @@ void FrameBuffer::drawLine (const int x1,
 			int xMove = 1;
 			if (dx < 0)
 			{
-					xMove = -1;
-					dx = -dx;
+				xMove = -1;
+				dx    = -dx;
 			}
 			int diff  = 2 * dx - dy;
 			int fillX = x1;
@@ -227,7 +228,59 @@ void FrameBuffer::drawTriangle (const int x1,
 				const int y3,
 				uint32_t color)
 {
-		drawLine (x1, y1, x2, y2, color);
-		drawLine (x2, y2, x3, y3, color);
-		drawLine (x3, y3, x1, y1, color);
+	drawLine (x1, y1, x2, y2, color);
+	drawLine (x2, y2, x3, y3, color);
+	drawLine (x3, y3, x1, y1, color);
 }
+// add a polygon structure with vertex vector and a count of vertex and find the
+// smallest and largest of x and y
+void FrameBuffer::drawPolygon (Polygon poly)
+{
+	const int ends	 = poly.count ();
+	const int smallX = poly.smallestX ();
+	const int largeX = poly.largestX ();
+	const int smallY = poly.smallestY ();
+	const int largeY = poly.largestX ();
+	float testX, testY;
+	for (testX = smallX; testX < largeX; ++testX)
+	{
+		// if (testX < 0)
+		//	continue;
+		for (testY = smallY; testY < largeY; ++testY)
+		{
+			// if (testY < 0)
+			//	continue;
+			bool oddNodes = true;
+			int i, j = ends - 1;
+
+			for (i = 0; i < ends; ++i)
+			{
+				if (((poly.getY (i) < testY &&
+				      poly.getY (j) >= testY) ||
+				     (poly.getY (j) < testY &&
+				      poly.getY (i) >= testY)) &&
+				    (poly.getX (i) <= testX ||
+				     poly.getX (j) <= testX))
+				{
+					if (poly.getX (i) +
+						    (testY - poly.getY (i)) /
+							    (poly.getY (j) -
+							     poly.getY (i)) *
+							    (poly.getX (j) -
+							     poly.getX (i)) <
+					    testX)
+					{
+						oddNodes = !oddNodes;
+					}
+				} // y is between two coords and x is greater
+				  // than both coords (why does that work? shouldn't the x also be between the coords?)
+				j = i;
+			} // go through nodes
+			if (!oddNodes)
+			{
+				setPixel (testX, testY, poly.getColor ());
+			} // Color Pixel
+		}	  // Y to test
+	}		  // X to test
+}
+

@@ -6,10 +6,10 @@ SDL2LIBS = -L/usr/lib -pthread -lSDL2
 CXXFLAGS = -Wall -pedantic -std=c++17 -I$(IDIR) -I$(STBDIR) $(SDL2CFLAGS) $(SDL2LIBS) -g
 ODIR = src/obj
 
-_DEPS = framebuffer.h map.h overlay.h player.h render.h sprite.h textures.h utils.h
+_DEPS = framebuffer.h geo-prims.h map.h overlay.h player.h render.h sprite.h textures.h utils.h
 DEPS = $(patsubst %, $(INCLUDE)/%, $(_DEPS))
 
-_OBJ = framebuffer.o gui.o map.o render.o sprite.o textures.o utils.o
+_OBJ = framebuffer.o geo-prims.o gui.o map.o render.o sprite.o textures.o utils.o
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
 
 $(ODIR)/%.o: src/%.cpp

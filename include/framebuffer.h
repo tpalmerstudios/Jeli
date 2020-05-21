@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "geo-prims.h"
+
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
@@ -33,6 +35,7 @@ struct FrameBuffer
 		       const int x2,
 		       const int y2,
 		       const uint32_t color);
+	void drawPolygon (Polygon poly);
 	bool isPixel (const int x, const int y) const;
 };
 

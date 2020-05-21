@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "textures.h"
 #include "utils.h"
+#include "geo-prims.h"
 
 #include "render.h"
 
@@ -106,8 +107,14 @@ int wallXTexCoord (const float hitX, const float hitY, const Texture &texWalls)
 void render (FrameBuffer &fb, const GameState &gs)
 {
 	fb.clear (packColor (255, 255, 255)); // clear screen
-	 const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
-	 const size_t rectH = (fb.h / 3) / gs.map.h; // set height of
+	/*std::vector <int> coords = { 1, 1, 300, 1, 280, 75, 800, 430, 200, 430};
+	Polygon poly;
+	poly.setColor (packColor (0, 0, 255));
+	if (poly.setVertexes(coords) != int (coords.size ()))
+			std::cout << " You fucked up!\n";
+	fb.drawPolygon (poly);*/
+	const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
+	const size_t rectH = (fb.h / 3) / gs.map.h; // set height of
 	// rectangle
 	// The sky!
 	drawSky (gs, fb);
