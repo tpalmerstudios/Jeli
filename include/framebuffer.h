@@ -1,5 +1,5 @@
-#include <cstdlib>
 #include <cstdint>
+#include <cstdlib>
 #include <vector>
 
 #include "geo-prims.h"
@@ -14,11 +14,7 @@ struct FrameBuffer
 
 	void clear (const uint32_t color);
 	void setPixel (const size_t iX, const size_t iY, const uint32_t color);
-	void drawRectangle (const size_t rectX,
-			    const size_t rectY,
-			    const size_t rectW,
-			    const size_t rectH,
-			    const uint32_t color);
+	void drawRectangle (Rectangle rect);
 	void drawTriangle (const int x1,
 			   const int y1,
 			   const int x2,
@@ -26,10 +22,7 @@ struct FrameBuffer
 			   const int x3,
 			   const int y3,
 			   const uint32_t color);
-	void drawCircle (const int x,
-			 const int y,
-			 const size_t radius,
-			 const uint32_t color);
+	void drawCircle (Circle circle);
 	void drawLine (const int x1,
 		       const int y1,
 		       const int x2,

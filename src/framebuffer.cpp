@@ -25,22 +25,18 @@ bool FrameBuffer::isPixel (const int x, const int y) const
 
 // Given a coordinate on output image and dimensions and a color
 // Call setPixel () and fill in the rectangle on a frame
-void FrameBuffer::drawRectangle (const size_t rectX,
-				 const size_t rectY,
-				 const size_t rectW,
-				 const size_t rectH,
-				 const uint32_t color)
+void FrameBuffer::drawRectangle (Rectangle rect)
 {
 	assert (img.size () == (w * h));
-	for (size_t i = 0; i < rectW; ++i)
+	size_t rw      = rect.getRight () - rect.getLeft ();
+	size_t rh      = rect.getBottom () - rect.getTop ();
+	uint32_t color = rect.getColor ();
+	int x	       = rect.getLeft ();
+	int y	       = rect.getTop ();
+	for (size_t i = 0; i < rw; ++i)
 	{
-		for (size_t j = 0; j < rectH; ++j)
-		{
-			size_t cx = rectX + i;
-			size_t cy = rectY + j;
-			if (cx < w && cy < h)
-				setPixel (cx, cy, color);
-		}
+		for (size_t j = 0; j < rh; ++j)
+			setPixel (x + i, y + j, color);
 	}
 }
 
@@ -166,16 +162,15 @@ void FrameBuffer::drawLine (const int x1,
 	}
 }
 
-void FrameBuffer::drawCircle (const int x,
-			      const int y,
-			      const size_t radius,
-			      const uint32_t color)
+void FrameBuffer::drawCircle (Circle circle)
 {
-	// I casted to int rather than to size_t because negative ints to size_t
-	// would give me garbage data
-	if (radius == 0 && x < int (w) && y < int (w))
-		setPixel (x, y, color);
-	for (size_t i = 1; i < radius; ++i)
+	int x	       = circle.getX ();
+	int y	       = circle.getY ();
+	size_t rad     = circle.getRad ();
+	uint32_t color = circle.getColor ();
+	if (rad == 0 && x < int (w) && y < int (w))
+		setPixel (circle.getX (), circle.getY (), circle.getColor ());
+	for (size_t i = 1; i < rad; ++i)
 	{
 		int offX	= 0;	  // offset of origin (called cx)
 		int offY	= i;	  // offset of origin (called cy)
@@ -273,7 +268,9 @@ void FrameBuffer::drawPolygon (Polygon poly)
 						oddNodes = !oddNodes;
 					}
 				} // y is between two coords and x is greater
-				  // than both coords (why does that work? shouldn't the x also be between the coords?)
+				  // than both coords (why does that work?
+				  // shouldn't the x also be between the
+				  // coords?)
 				j = i;
 			} // go through nodes
 			if (!oddNodes)

@@ -7,12 +7,12 @@
 #include <vector>
 
 #include "framebuffer.h"
+#include "geo-prims.h"
 #include "map.h"
 #include "player.h"
 #include "sprite.h"
 #include "textures.h"
 #include "utils.h"
-#include "geo-prims.h"
 
 #include "render.h"
 
@@ -43,8 +43,13 @@ uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor);
 
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
-	fb.drawRectangle (
-		0, 0, fb.w, gs.player.horizon, packColor (180, 180, 255));
+	Rectangle rect;
+	rect.setLeft (0);
+	rect.setTop (0);
+	rect.setRight (fb.w);
+	rect.setBottom (gs.player.horizon);
+	rect.setColor (packColor (180, 180, 255));
+	fb.drawRectangle (rect);
 	// fb.drawTriangle (200, 200, 600, 400, 400, 800, packColor (255, 0,
 	// 0));
 }
@@ -54,11 +59,13 @@ void drawMap (const GameState &gs,
 	      const size_t cellW,
 	      const size_t cellH)
 {
-	fb.drawRectangle (0,
-			  0,
-			  cellW * gs.map.w,
-			  cellH * gs.map.h,
-			  packColor (170, 255, 170));
+	Rectangle mapSquare;
+	mapSquare.setLeft (0);
+	mapSquare.setTop (0);
+	mapSquare.setRight (cellW * gs.map.w);
+	mapSquare.setBottom (cellH * gs.map.h);
+	mapSquare.setColor (packColor (170, 255, 170));
+	fb.drawRectangle (mapSquare);
 	for (size_t j = 0; j < gs.map.h; ++j)
 	{
 		for (size_t i = 0; i < gs.map.w; ++i)
@@ -67,11 +74,13 @@ void drawMap (const GameState &gs,
 				continue;
 			size_t rectX = i * cellW;
 			size_t rectY = j * cellH;
-			fb.drawRectangle (rectX,
-					  rectY,
-					  cellW,
-					  cellH,
-					  packColor (0, 0, 0));
+	Rectangle wall;
+	wall.setLeft (rectX);
+	wall.setTop (rectY);
+	wall.setRight (rectX + cellW);
+	wall.setBottom (rectY + cellH);
+	wall.setColor (packColor (0, 0, 0));
+	fb.drawRectangle (wall);
 		} // draw the map (x)
 	}	  // draw the map (y)
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
@@ -107,12 +116,10 @@ int wallXTexCoord (const float hitX, const float hitY, const Texture &texWalls)
 void render (FrameBuffer &fb, const GameState &gs)
 {
 	fb.clear (packColor (255, 255, 255)); // clear screen
-	/*std::vector <int> coords = { 1, 1, 300, 1, 280, 75, 800, 430, 200, 430};
-	Polygon poly;
-	poly.setColor (packColor (0, 0, 255));
-	if (poly.setVertexes(coords) != int (coords.size ()))
-			std::cout << " You fucked up!\n";
-	fb.drawPolygon (poly);*/
+	/*std::vector <int> coords = { 1, 1, 300, 1, 280, 75, 800, 430, 200,
+	430}; Polygon poly; poly.setColor (packColor (0, 0, 255)); if
+	(poly.setVertexes(coords) != int (coords.size ())) std::cout << " You
+	fucked up!\n"; fb.drawPolygon (poly);*/
 	const size_t rectW = (fb.w / 4) / gs.map.w; // set width of rectangle
 	const size_t rectH = (fb.h / 3) / gs.map.h; // set height of
 	// rectangle

@@ -3,6 +3,23 @@
 
 #include <geo-prims.h>
 
+int Rectangle::getLeft ()
+{
+	return (origin.getX () < end.getX ()) ? origin.getX () : end.getX ();
+}
+int Rectangle::getTop ()
+{
+	return (origin.getY () < end.getY ()) ? origin.getY () : end.getY ();
+}
+int Rectangle::getRight ()
+{
+	return (end.getX () > origin.getX ()) ? end.getX () : origin.getX ();
+}
+int Rectangle::getBottom ()
+{
+	return (end.getY () > origin.getY ()) ? end.getY () : origin.getY ();
+}
+
 int Polygon::setVertexes (std::vector<int> coord)
 {
 	if (coord.size () % 2)
