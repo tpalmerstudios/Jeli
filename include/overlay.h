@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #ifndef OVERLAY_H
 #define OVERLAY_H
 

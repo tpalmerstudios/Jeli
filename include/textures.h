@@ -1,3 +1,7 @@
+#include <cstdint>
+#include <string>
+#include <vector>
+
 #ifndef TEXTURES_H
 #define TEXTURES_H
 
