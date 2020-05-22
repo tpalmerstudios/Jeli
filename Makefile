@@ -1,8 +1,8 @@
 CXX = g++
 IDIR = ./include
 STBDIR = ./stb
-SDL2CFLAGS = -I/usr/include/SDL2 -D_REENTRANT1
-SDL2LIBS = -L/usr/lib -pthread -lSDL2
+SDL2CFLAGS := $(shell sdl-config --cflags)
+SDL2LIBS := $(shell sdl-config --libs)
 CXXFLAGS = -Wall -pedantic -std=c++17 -I$(IDIR) -I$(STBDIR) $(SDL2CFLAGS) $(SDL2LIBS) -g
 ODIR = src/obj
 
