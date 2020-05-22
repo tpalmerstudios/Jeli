@@ -56,122 +56,6 @@ void FrameBuffer::clear (const uint32_t color)
 
 // Based on Bresenham's Line Algorithm (integer)
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-void FrameBuffer::drawLine (Line line)
-{
-	// Cant find definition? Its in geo-prims.h
-	//
-	int x1	       = line.getAX ();
-	int x2	       = line.getBX ();
-	int y1	       = line.getAY ();
-	int y2	       = line.getBY ();
-	uint32_t color = line.getColor ();
-	if (abs (y2 - y1) < abs (x2 - x1))
-	{
-		if (x1 > x2)
-		{
-			// plotLineLow
-			int dx	  = x1 - x2; // Delta X
-			int dy	  = y1 - y2; // Delta Y
-			int yMove = 1;
-			if (dy < 0)
-			{
-				yMove = -1;
-				dy    = -dy;
-			}
-			int diff  = 2 * dy - dx;
-			int fillY = y2;
-
-			for (int fillX = x2; fillX < x1; ++fillX)
-			{
-				setPixel (fillX, fillY, color);
-				if (diff > 0)
-				{
-					fillY += yMove;
-					diff -= 2 * dx;
-				}
-				diff += 2 * dy;
-			}
-		}
-		else
-		{
-			// plotLineLow
-			int dx	  = x2 - x1; // Delta X
-			int dy	  = y2 - y1; // Delta Y
-			int yMove = 1;
-			if (dy < 0)
-			{
-				yMove = -1;
-				dy    = -dy;
-			}
-			int diff  = 2 * dy - dx;
-			int fillY = y1;
-
-			for (int fillX = x1; fillX < x2; ++fillX)
-			{
-				setPixel (fillX, fillY, color);
-				if (diff > 0)
-				{
-					fillY += yMove;
-					diff -= 2 * dx;
-				}
-				diff += 2 * dy;
-			}
-		}
-	}
-	else
-	{
-		if (y1 > y2)
-		{
-			// plotline high
-			int dx	  = x1 - x2; // Delta X
-			int dy	  = y1 - y2; // Delta Y
-			int xMove = 1;
-			if (dx < 0)
-			{
-				xMove = -1;
-				dx    = -dx;
-			}
-			int diff  = 2 * dx - dy;
-			int fillX = x2;
-
-			for (int fillY = y2; fillY < y1; ++fillY)
-			{
-				setPixel (fillX, fillY, color);
-				if (diff > 0)
-				{
-					fillX += xMove;
-					diff -= 2 * dy;
-				}
-				diff += 2 * dx;
-			}
-		}
-		else
-		{
-			// plotline high
-			int dx	  = x2 - x1; // Delta X
-			int dy	  = y2 - y1; // Delta Y
-			int xMove = 1;
-			if (dx < 0)
-			{
-				xMove = -1;
-				dx    = -dx;
-			}
-			int diff  = 2 * dx - dy;
-			int fillX = x1;
-
-			for (int fillY = y1; fillY < y2; ++fillY)
-			{
-				setPixel (fillX, fillY, color);
-				if (diff > 0)
-				{
-					fillX += xMove;
-					diff -= 2 * dy;
-				}
-				diff += 2 * dx;
-			}
-		}
-	}
-}
 
 void FrameBuffer::drawCircle (Circle circle)
 {
@@ -185,8 +69,8 @@ void FrameBuffer::drawCircle (Circle circle)
 	{
 		int offX	= 0;	  // offset of origin (called cx)
 		int offY	= i;	  // offset of origin (called cy)
-		size_t sX	= 1;	  // step X
-		size_t sY	= -2 * i; // step Y
+		int sX	= 1;	  // step X
+		int sY	= -2 * i; // step Y
 		int determinant = 1 - i;  // (called result or dp)
 		while (offX < offY)
 		{
@@ -292,3 +176,13 @@ void FrameBuffer::drawPolygon (Polygon poly)
 	}		  // X to test
 }
 
+void FrameBuffer::drawOver (std::vector <int> coord, uint32_t color)
+{
+		if (coord.size () % 2)
+				return;
+		for (size_t i = 0; i < coord.size (); i += 2)
+		{
+				uint32_t bgColor = getPixel (coord [i], coord [i + 1]);
+				setPixel (coord [i], coord [i + 1], overlay (bgColor, color));
+		}
+}

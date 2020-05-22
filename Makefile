@@ -12,7 +12,7 @@ DEPS = $(patsubst %, $(INCLUDE)/%, $(_DEPS))
 _OBJ = framebuffer.o geo-prims.o gui.o map.o render.o sprite.o textures.o utils.o
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
 
-$(ODIR)/%.o: src/%.cpp
+$(ODIR)/%.o: src/%.cpp $(DEPS)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 jeli: $(OBJ)

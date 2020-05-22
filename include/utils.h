@@ -15,6 +15,7 @@ void dropPPMImage (const std::string filename,
 		   const std::vector<uint32_t> &image,
 		   const size_t w,
 		   const size_t h);
+uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor);
 
 #endif // UTILS_H
 

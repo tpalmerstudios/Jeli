@@ -38,3 +38,41 @@ void dropPPMImage (const std::string filename,
 	}
 	ppmFile.close ();
 }
+
+uint32_t overlay (const uint32_t bgColor, const uint32_t fgColor)
+{
+	// if r,g,b are greater than the background r,g,b take the difference
+	// times the opacity and add it to the background color, otherwise
+	// subtract it
+	uint8_t bgR, bgG, bgB, bgA, fgR, fgG, fgB, fgA;
+	unpackColor (bgColor, bgR, bgG, bgB, bgA);
+	unpackColor (fgColor, fgR, fgG, fgB, fgA);
+	// Red
+	size_t colorDif = (fgR - bgR) * float (fgA / 255);
+	if ((size_t) fgR - (size_t) bgR > 0)
+		fgR = ((size_t) bgR + colorDif > 255)
+			      ? 255
+			      : bgR + (uint8_t) colorDif;
+	else
+		fgR = ((size_t) bgR - colorDif < 0) ? 0
+						    : bgR - (uint8_t) colorDif;
+	// Green
+	colorDif = (fgG - bgG) * float (fgA / 255);
+	if ((size_t) fgG - (size_t) bgG > 0)
+		fgG = ((size_t) bgG + colorDif > 255)
+			      ? 255
+			      : bgG + (uint8_t) colorDif;
+	else
+		fgG = ((size_t) bgG - colorDif < 0) ? 0
+						    : bgG - (uint8_t) colorDif;
+	// Blue
+	colorDif = (fgB - bgB) * float (fgA / 255);
+	if ((size_t) fgB - (size_t) bgB > 0)
+		fgB = ((size_t) bgB + colorDif > 255)
+			      ? 255
+			      : bgB + (uint8_t) colorDif;
+	else
+		fgB = ((size_t) bgB - colorDif < 0) ? 0
+						    : bgB - (uint8_t) colorDif;
+	return packColor (fgR, fgG, fgB);
+}

@@ -20,6 +20,7 @@ class FrameBuffer
 	size_t getH () { return h; }
 	void setW (size_t wide) { w = wide; }
 	void setH (size_t height) { h = height; }
+	void drawOver (std::vector <int> coords, uint32_t color);
 
 	void clear (const uint32_t color);
 	uint32_t getPixel (const size_t x, const size_t y);

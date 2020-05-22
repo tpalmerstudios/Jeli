@@ -15,6 +15,12 @@ class Point
 	int getY () { return y; }
 	void setX (int setX) { x = setX; }
 	void setY (int setY) { y = setY; }
+	Point (int a, int b)
+	{
+		x = a;
+		y = b;
+	}
+	Point () {}
 };
 
 class Circle
@@ -82,6 +88,7 @@ class Line
 	Point origin;
 	Point end;
 	uint32_t color;
+	std::vector<int> coord;
 
     public:
 	uint32_t getColor () { return color; }
@@ -96,6 +103,20 @@ class Line
 	void setAY (int setY) { origin.setY (setY); }
 	void setBX (int setX) { end.setX (setX); }
 	void setBY (int setY) { end.setY (setY); }
+	void draw ();
+	std::vector<int> getCoords ()
+	{
+		if (coord.size () < 4)
+			draw ();
+		return coord;
+	}
+	Line (int ax, int ay, int bx, int by, uint32_t col)
+	    : origin (ax, ay), end (bx, by)
+	{
+		color = col;
+		draw ();
+	}
+	Line () {}
 };
 
 #endif // GEO_PRIMS_H
