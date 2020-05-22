@@ -19,6 +19,21 @@ int Rectangle::getBY ()
 {
 	return (end.getY () > origin.getY ()) ? end.getY () : origin.getY ();
 }
+void Rectangle::draw ()
+{
+		const size_t rw = getBX () - getAX ();
+		const size_t rh = getBY () - getAY ();
+		const int cx = getAX ();
+		const int cy = getAY ();
+		for (size_t i = 0; i < rw; ++i)
+		{
+				for (size_t j = 0; j < rh; ++j)
+				{
+						coord.push_back (cx + i);
+						coord.push_back (cy + j);
+				}
+		}
+}
 
 int Polygon::setVertexes (std::vector<int> coord)
 {

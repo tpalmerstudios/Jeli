@@ -25,7 +25,6 @@ class FrameBuffer
 	void clear (const uint32_t color);
 	uint32_t getPixel (const size_t x, const size_t y);
 	void setPixel (const size_t iX, const size_t iY, const uint32_t color);
-	void drawRectangle (Rectangle rect);
 	void drawTriangle (const int x1,
 			   const int y1,
 			   const int x2,

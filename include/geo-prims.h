@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstdlib>
+#include <iostream>
 #include <vector>
 
 #ifndef GEO_PRIMS_H
@@ -47,6 +48,7 @@ class Rectangle
 	Point origin;
 	Point end;
 	uint32_t color;
+	std::vector<int> coord;
 
     public:
 	uint32_t getColor () { return color; }
@@ -61,6 +63,21 @@ class Rectangle
 	void setAY (int setY) { origin.setY (setY); }
 	void setBX (int setX) { end.setX (setX); }
 	void setBY (int setY) { end.setY (setY); }
+	void draw ();
+	std::vector<int> getCoords ()
+	{
+		if (coord.empty ())
+			draw ();
+		return coord;
+	}
+	Rectangle (int ax, int ay, int bx, int by, uint32_t col)
+	    : origin (ax, ay), end (bx, by)
+	{
+		color = col;
+		draw ();
+	}
+	Rectangle () {}
+	~Rectangle () { coord.clear (); }
 };
 
 class Polygon
@@ -117,6 +134,7 @@ class Line
 		draw ();
 	}
 	Line () {}
+	~Line () { coord.clear (); }
 };
 
 #endif // GEO_PRIMS_H

@@ -31,23 +31,6 @@ bool FrameBuffer::isPixel (const int x, const int y) const
 	return (x < int (w) && y < int (h) && x >= 0 && y >= 0);
 }
 
-// Given a coordinate on output image and dimensions and a color
-// Call setPixel () and fill in the rectangle on a frame
-void FrameBuffer::drawRectangle (Rectangle rect)
-{
-	assert (img.size () == (w * h));
-	size_t rw      = rect.getBX () - rect.getAX ();
-	size_t rh      = rect.getBY () - rect.getAY ();
-	uint32_t color = rect.getColor ();
-	int x	       = rect.getAX ();
-	int y	       = rect.getAY ();
-	for (size_t i = 0; i < rw; ++i)
-	{
-		for (size_t j = 0; j < rh; ++j)
-			setPixel (x + i, y + j, color);
-	}
-}
-
 // Fill the entire frame with one color
 void FrameBuffer::clear (const uint32_t color)
 {

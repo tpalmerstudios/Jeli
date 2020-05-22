@@ -42,13 +42,9 @@ void drawSky (const GameState &gs, FrameBuffer &fb);
 
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
-	Rectangle rect;
-	rect.setAX (0);
-	rect.setAY (0);
-	rect.setBX (fb.getW ());
-	rect.setBY (gs.player.horizon);
-	rect.setColor (packColor (180, 180, 255));
-	fb.drawRectangle (rect);
+	Rectangle rect (
+		0, 0, fb.getW (), gs.player.horizon, packColor (180, 180, 255));
+	fb.drawOver (rect.getCoords (), rect.getColor ());
 	// fb.drawTriangle (200, 200, 600, 400, 400, 800, packColor (255, 0,
 	// 0));
 }
@@ -58,13 +54,12 @@ void drawMap (const GameState &gs,
 	      const size_t cellW,
 	      const size_t cellH)
 {
-	Rectangle mapSquare;
-	mapSquare.setAX (0);
-	mapSquare.setAY (0);
-	mapSquare.setBX (cellW * gs.map.w);
-	mapSquare.setBY (cellH * gs.map.h);
-	mapSquare.setColor (packColor (170, 255, 170));
-	fb.drawRectangle (mapSquare);
+	Rectangle mapSquare (0,
+			     0,
+			     cellW * gs.map.w,
+			     cellH * gs.map.h,
+			     packColor (170, 255, 170));
+	fb.drawOver (mapSquare.getCoords (), mapSquare.getColor ());
 	for (size_t j = 0; j < gs.map.h; ++j)
 	{
 		for (size_t i = 0; i < gs.map.w; ++i)
@@ -73,13 +68,12 @@ void drawMap (const GameState &gs,
 				continue;
 			size_t rectX = i * cellW;
 			size_t rectY = j * cellH;
-			Rectangle wall;
-			wall.setAX (rectX);
-			wall.setAY (rectY);
-			wall.setBX (rectX + cellW);
-			wall.setBY (rectY + cellH);
-			wall.setColor (packColor (0, 0, 0));
-			fb.drawRectangle (wall);
+			Rectangle wall (rectX,
+					rectY,
+					rectX + cellW,
+					rectY + cellH,
+					packColor (0, 0, 0));
+			fb.drawOver (wall.getCoords (), wall.getColor ());
 		} // draw the map (x)
 	}	  // draw the map (y)
 	for (size_t i = 0; i < gs.monsters.size (); ++i)
@@ -90,7 +84,7 @@ void drawMap (const GameState &gs,
 		obj.setBX (gs.monsters [i].x * cellW);
 		obj.setBY (gs.monsters [i].y * cellH);
 		obj.setColor (packColor (255, 0, 0));
-		fb.drawRectangle (obj);
+		fb.drawOver (obj.getCoords (), obj.getColor ());
 	} // show monsters / sprites
 	mapPositionAngle (gs.player.x,
 			  gs.player.y,
@@ -128,13 +122,8 @@ void render (FrameBuffer &fb, const GameState &gs)
 	// The sky!
 	drawSky (gs, fb);
 	// The grass
-	Rectangle grass;
-	grass.setAX (0);
-	grass.setAY (gs.player.horizon);
-	grass.setBX (fb.getW ());
-	grass.setBY (fb.getH ());
-	grass.setColor (packColor (70, 255, 70));
-	fb.drawRectangle (grass);
+	Rectangle grass (0, gs.player.horizon, fb.getW (), fb.getH (), packColor (70, 255, 70));
+	fb.drawOver (grass.getCoords (), grass.getColor ());
 
 	std::vector<float> depthBuffer (fb.getW (), 1e3);
 	for (size_t i = 0; i < fb.getW (); ++i)
@@ -154,11 +143,10 @@ void render (FrameBuffer &fb, const GameState &gs)
 				continue;
 			size_t texID = gs.map.get (x, y);
 			assert (texID < gs.texWalls.count);
-			float dist	= t * cos (angle - gs.player.angle);
-			depthBuffer [i] = dist;
-			size_t columnHeight =
-				floor (float (fb.getH ()) / dist);
-			int xTexCoord = wallXTexCoord (x, y, gs.texWalls);
+			float dist	    = t * cos (angle - gs.player.angle);
+			depthBuffer [i]	    = dist;
+			size_t columnHeight = floor (float (fb.getH ()) / dist);
+			int xTexCoord	    = wallXTexCoord (x, y, gs.texWalls);
 			std::vector<uint32_t> column =
 				gs.texWalls.getScaledColumn (
 					texID, xTexCoord, columnHeight);
