@@ -12,13 +12,17 @@ DEPS = $(patsubst %, $(INCLUDE)/%, $(_DEPS))
 _OBJ = framebuffer.o geo-prims.o gui.o map.o render.o sprite.o textures.o utils.o
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
 
-$(ODIR)/%.o: src/%.cpp
+$(ODIR)/%.o: src/%.cpp | $(ODIR)
 	$(CXX) -c $< $(CXXFLAGS) -o $@ 
 
-jeli: $(OBJ)
+jeli: $(OBJ) | $(ODIR)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(SDL2LIBS)
 
-.PHONY: clean
+$(ODIR):
+	@echo "Folder $(ODIR) does not exit. Creating"
+	mkdir -p $@
+
+.PHONY: clean all
 
 clean:
 	-rm $(ODIR)/*.o
