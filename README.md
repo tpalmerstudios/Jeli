@@ -11,9 +11,6 @@ A first-person game engine for the beginning developer
 	The repository you just cloned should be inside this (Jeli) repository now. `ls Jeli/stb` should output a few directories and about 20 header files now.
 3. Compile  
 	`make clean && make`  
-	If there is an error like cannot access src/obj/*filename.o*:  
-	Simply create the directory src/obj `mkdir src/obj`
-	(I'll try to make sure that the Makefile adds a check for it)
 
 Based on ssloy/tinyraycaster. I probably should've forked it or something, but at this point the code is drastically changed. In addition while it says initial commit, this is by no means the first changes I've done.I've been steadily working through his tutorial and recently have actually been adding features. My goal is to make it able to draw several shapes. Circle, Triangle, Cubes, and maybe ovals. In addition I want to rework the map system to allow for higher pov or lower. And possibly every single item having an altitude variable as well as an angle. I have started by adding a horizon variable that is used instead of just splitting the screen in half.My next step will probably be adding a jump action that will respond to SPACE. And lower the horizon 10% of screen height. This is not a great readme, but it allows me to figure out what I need to do next.
 
