@@ -1,5 +1,5 @@
 *.o
 *.ycm_conf_extra.py
 *.clang-format
-*compile_commands.json
-
+compile_commands.json
+.clangd
