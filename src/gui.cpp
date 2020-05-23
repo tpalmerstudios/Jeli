@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include "SDL.h"
 
 #include "framebuffer.h"

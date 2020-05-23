@@ -1,6 +1,12 @@
 # Jeli
 A first-person game engine for the beginning developer
 
+## Installation
+0. Clone this repository
+1. Download SDL2 for your system.
+2. Clone https://github.com/nothings/stb into the empty stb directory
+3. make
+
 Based on ssloy/tinyraycaster. I probably should've forked it or something, but at this point the code is drastically changed. In addition while it says initial commit, this is by no means the first changes I've done.I've been steadily working through his tutorial and recently have actually been adding features. My goal is to make it able to draw several shapes. Circle, Triangle, Cubes, and maybe ovals. In addition I want to rework the map system to allow for higher pov or lower. And possibly every single item having an altitude variable as well as an angle. I have started by adding a horizon variable that is used instead of just splitting the screen in half.My next step will probably be adding a jump action that will respond to SPACE. And lower the horizon 10% of screen height. This is not a great readme, but it allows me to figure out what I need to do next.
 
 ***Step 1 - Shape rendering***  
