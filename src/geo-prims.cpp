@@ -21,18 +21,87 @@ int Rectangle::getBY ()
 }
 void Rectangle::draw ()
 {
-		const size_t rw = getBX () - getAX ();
-		const size_t rh = getBY () - getAY ();
-		const int cx = getAX ();
-		const int cy = getAY ();
-		for (size_t i = 0; i < rw; ++i)
+	const size_t rw = getBX () - getAX ();
+	const size_t rh = getBY () - getAY ();
+	const int cx	= getAX ();
+	const int cy	= getAY ();
+	for (size_t i = 0; i < rw; ++i)
+	{
+		for (size_t j = 0; j < rh; ++j)
 		{
-				for (size_t j = 0; j < rh; ++j)
-				{
-						coord.push_back (cx + i);
-						coord.push_back (cy + j);
-				}
+			coord.push_back (cx + i);
+			coord.push_back (cy + j);
 		}
+	}
+}
+
+void Circle::draw ()
+{
+	int x	   = getX ();
+	int y	   = getY ();
+	size_t rad = getRad ();
+
+	if (rad == 0)
+	{
+		coord.push_back (x);
+		coord.push_back (y);
+	}
+	for (size_t i = 1; i < rad; ++i)
+	{
+		int offX	= 0;	  // offset of origin (called cx)
+		int offY	= i;	  // offset of origin (called cy)
+		int sX		= 1;	  // step X
+		int sY		= -2 * i; // step Y
+		int determinant = 1 - i;  // (called result or dp)
+		while (offX < offY)
+		{
+			if (determinant >= 0)
+			{
+				offY--;
+				sY += 2;
+				determinant += sY;
+			}
+			// On wikipedia I saw a circle with gaps in it, it was
+			// discussing this algorithm, and several articles I
+			// read about this algorithm have it wrong.... This next
+			// block should be in an else block. Otherwise you'll
+			// have to deal with it as I did
+			else
+			{
+				offX++;
+				sX += 2;
+				determinant += sX;
+			}
+			/**************************
+			 * Figure out if all of these points are valid!
+			 * ***********************/
+			coord.push_back(x + offX);
+			coord.push_back(y + offY);
+			coord.push_back(x - offX);
+			coord.push_back(y + offY);
+			coord.push_back(x + offX);
+			coord.push_back(y - offY);
+			coord.push_back(x - offX);
+			coord.push_back(y - offY);
+
+			coord.push_back (x + offY);
+			coord.push_back (y + offX);
+			coord.push_back (x - offY);
+			coord.push_back (y + offX);
+			coord.push_back (x + offY);
+			coord.push_back (y - offX);
+			coord.push_back (x - offY);
+			coord.push_back (y - offX);
+		}
+		coord.push_back (x);
+		coord.push_back (y + i);
+		coord.push_back (x);
+		coord.push_back (y - i);
+		coord.push_back (x + i);
+		coord.push_back (y);
+		coord.push_back (x - i);
+		coord.push_back (y);
+	}
 }
 
 int Polygon::setVertexes (std::vector<int> coord)
@@ -109,7 +178,7 @@ void Line::draw ()
 		if (ax > bx)
 		{
 			// plotLineLow
-			int dx	  = ax - bx;	      // Delta X
+			int dx	  = ax - bx; // Delta X
 			int dy	  = ay - by; // Delta Y
 			int yMove = 1;
 			if (dy < 0)
@@ -135,7 +204,7 @@ void Line::draw ()
 		else
 		{
 			// plotLineLow
-			int dx	  = bx - ax;	      // Delta X
+			int dx	  = bx - ax; // Delta X
 			int dy	  = by - ay; // Delta Y
 			int yMove = 1;
 			if (dy < 0)
@@ -164,7 +233,7 @@ void Line::draw ()
 		if (ay > by)
 		{
 			// plotline high
-			int dx	  = ax - bx;	      // Delta X
+			int dx	  = ax - bx; // Delta X
 			int dy	  = ay - by; // Delta Y
 			int xMove = 1;
 			if (dx < 0)
@@ -190,7 +259,7 @@ void Line::draw ()
 		else
 		{
 			// plotline high
-			int dx	  = bx - ax;	      // Delta X
+			int dx	  = bx - ax; // Delta X
 			int dy	  = by - ay; // Delta Y
 			int xMove = 1;
 			if (dx < 0)

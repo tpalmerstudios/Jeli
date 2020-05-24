@@ -30,16 +30,34 @@ class Circle
 	Point origin;
 	size_t radius;
 	uint32_t color;
+	std::vector<int> coord;
 
     public:
-	size_t getRad () { return radius; }
 	uint32_t getColor () { return color; }
+	void setColor (uint32_t rgba) { color = rgba; }
+
 	int getX () { return origin.getX (); }
 	int getY () { return origin.getY (); }
-	void setRad (size_t rad) { radius = rad; }
+
 	void setX (int setX) { origin.setX (setX); }
 	void setY (int setY) { origin.setY (setY); }
-	void setColor (uint32_t rgba) { color = rgba; }
+
+	void setRad (size_t rad) { radius = rad; }
+	size_t getRad () { return radius; }
+	void draw ();
+	std::vector<int> getCoords ()
+	{
+		if (coord.empty ())
+			draw ();
+		return coord;
+	}
+	Circle () {}
+	~Circle () { coord.clear (); }
+	Circle (int x, int y, uint32_t col) : origin (x, y)
+		{
+				color = col;
+				draw ();
+		}
 };
 
 class Rectangle

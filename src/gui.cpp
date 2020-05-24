@@ -15,8 +15,8 @@
 int main ()
 {
 	FrameBuffer fb;
-	fb.setW (800);
-	fb.setH (400); // Add custom screen sizes recieved from sdl
+	fb.setW (1024);
+	fb.setH (512); // Add custom screen sizes recieved from sdl
 	fb.img = std::vector<uint32_t> (fb.getW () * fb.getH (),
 					packColor (255, 255, 255));
 	GameState gs{
