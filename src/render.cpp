@@ -39,6 +39,17 @@ void drawMap (const GameState &gs,
 	      const size_t cellW,
 	      const size_t cellH);
 void drawSky (const GameState &gs, FrameBuffer &fb);
+void drawGround (const GameState &gs, FrameBuffer &fb);
+
+void drawGround (const GameState &gs, FrameBuffer &fb)
+{
+	Rectangle rect (0,
+			gs.player.horizon,
+			fb.getW (),
+			fb.getH (),
+			packColor (70, 255, 70));
+	fb.drawOver (rect.getCoords (), rect.getColor ());
+}
 
 void drawSky (const GameState &gs, FrameBuffer &fb)
 {
@@ -110,20 +121,12 @@ int wallXTexCoord (const float hitX, const float hitY, const Texture &texWalls)
 
 void render (FrameBuffer &fb, const GameState &gs)
 {
-	fb.clear (packColor (255, 255, 255)); // clear screen
-	/*std::vector <int> coords = { 1, 1, 300, 1, 280, 75, 800, 430, 200,
-	430}; Polygon poly; poly.setColor (packColor (0, 0, 255)); if
-	(poly.setVertexes(coords) != int (coords.size ())) std::cout << " You
-	fucked up!\n"; fb.drawPolygon (poly);*/
-	const size_t rectW =
-		(fb.getW () / 4) / gs.map.w; // set width of rectangle
-	const size_t rectH = (fb.getH () / 3) / gs.map.h; // set height of
-	// rectangle
-	// The sky!
+	fb.clear (packColor (255, 255, 255));
 	drawSky (gs, fb);
-	// The grass
-	Rectangle grass (0, gs.player.horizon, fb.getW (), fb.getH (), packColor (70, 255, 70));
-	fb.drawOver (grass.getCoords (), grass.getColor ());
+	drawGround (gs, fb);
+	const size_t mapW =
+		(fb.getW () / 4) / gs.map.w; // set width of rectangle
+	const size_t mapH = (fb.getH () / 3) / gs.map.h; // set height of
 
 	std::vector<float> depthBuffer (fb.getW (), 1e3);
 	for (size_t i = 0; i < fb.getW (); ++i)
@@ -154,11 +157,14 @@ void render (FrameBuffer &fb, const GameState &gs)
 			for (size_t j = 0; j < columnHeight; ++j)
 			{
 				// Origin of the columns... floor doesn't seem
-				// to do well
+				// to do well TODO: Fix origin, columnHeigh, etc.
 				int pixY = j + gs.player.horizon -
 					   (columnHeight / 2);
 				if (pixY >= 0 && pixY < int (fb.getH ()))
 					fb.setPixel (pixX, pixY, column [j]);
+				// Why are there columns that are several pixels 
+				// wide sometimes? I don't understand
+				// Like the same issue I think as this previous one
 			}
 			break;
 		} // draw out the length of the ray
@@ -171,7 +177,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 			    gs.player,
 			    gs.texMonsters);
 	} // Show sprites
-	drawMap (gs, fb, rectW, rectH);
+	drawMap (gs, fb, mapW, mapH);
 } // render ()
 
 void mapPositionAngle (float x,
@@ -181,19 +187,19 @@ void mapPositionAngle (float x,
 		       FrameBuffer &fb,
 		       const uint32_t color)
 {
-	const size_t rectW = (fb.getW () / 4) / map.w;
-	const size_t rectH = (fb.getH () / 3) / map.h;
-	float loop	   = 0;
+	const size_t mapW = (fb.getW () / 4) / map.w;
+	const size_t mapH = (fb.getH () / 3) / map.h;
+	float loop	  = 0.;
 	for (float nAngle = (angle - M_PI) - (M_PI / 8);
 	     nAngle <= (angle - M_PI) + (M_PI / 6);
 	     nAngle += (M_PI / 4) * loop)
 	{
-		loop += .005;
-		for (float j = 0; j < 1; j += 0.01)
+		loop += .01;
+		for (float j = 0; j < 1; j += 0.010)
 		{
 			float fillX = x + (j * cos (nAngle));
 			float fillY = y + (j * sin (nAngle));
-			fb.setPixel (fillX * rectW, fillY * rectH, color);
+			fb.setPixel (fillX * mapW, fillY * mapH, color);
 		} // draw line of angle
 	}	  // Go through angles
 }

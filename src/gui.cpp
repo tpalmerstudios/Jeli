@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <vector>
-#include <cmath>
 #include "SDL.h"
 
 #include "framebuffer.h"
@@ -15,8 +15,8 @@
 int main ()
 {
 	FrameBuffer fb;
-	fb.setW (1024);
-	fb.setH (512);
+	fb.setW (800);
+	fb.setH (400); // Add custom screen sizes recieved from sdl
 	fb.img = std::vector<uint32_t> (fb.getW () * fb.getH (),
 					packColor (255, 255, 255));
 	GameState gs{
@@ -26,7 +26,7 @@ int main ()
 		 {1.834, 8.765, 0, 0},
 		 {5.323, 5.365, 1, 0},
 		 {4.123, 10.76, 1, 0}},
-		Texture ("media/wallText-2.png"),
+		Texture ("media/brickTextures.png"),
 		Texture ("media/monsters.png")};
 	if (!gs.texWalls.count || !gs.texMonsters.count)
 	{
