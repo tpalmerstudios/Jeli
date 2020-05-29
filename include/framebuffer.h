@@ -15,12 +15,12 @@ class FrameBuffer
     public:
 	std::vector<uint32_t> img;
 
-	std::vector<uint32_t> getImg () { return img;}
+	std::vector<uint32_t> getImg () { return img; }
 	size_t getW () { return w; }
 	size_t getH () { return h; }
 	void setW (size_t wide) { w = wide; }
 	void setH (size_t height) { h = height; }
-	void drawOver (std::vector <int> coords, uint32_t color);
+	void drawOver (std::vector<int> coords, uint32_t color);
 
 	void clear (const uint32_t color);
 	uint32_t getPixel (const size_t x, const size_t y);
@@ -32,8 +32,6 @@ class FrameBuffer
 			   const int x3,
 			   const int y3,
 			   const uint32_t color);
-	void drawCircle (Circle circle);
-	void drawLine (Line line);
 	void drawPolygon (Polygon poly);
 	bool isPixel (const int x, const int y) const;
 };

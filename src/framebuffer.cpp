@@ -37,62 +37,6 @@ void FrameBuffer::clear (const uint32_t color)
 	img = std::vector<uint32_t> (w * h, color);
 }
 
-// Based on Bresenham's Line Algorithm (integer)
-// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-
-void FrameBuffer::drawCircle (Circle circle)
-{
-	int x	       = circle.getX ();
-	int y	       = circle.getY ();
-	size_t rad     = circle.getRad ();
-	uint32_t color = circle.getColor ();
-	if (rad == 0 && x < int (w) && y < int (w))
-		setPixel (circle.getX (), circle.getY (), circle.getColor ());
-	for (size_t i = 1; i < rad; ++i)
-	{
-		int offX	= 0;	  // offset of origin (called cx)
-		int offY	= i;	  // offset of origin (called cy)
-		int sX	= 1;	  // step X
-		int sY	= -2 * i; // step Y
-		int determinant = 1 - i;  // (called result or dp)
-		while (offX < offY)
-		{
-			if (determinant >= 0)
-			{
-				offY--;
-				sY += 2;
-				determinant += sY;
-			}
-			// On wikipedia I saw a circle with gaps in it, it was
-			// discussing this algorithm, and several articles I
-			// read about this algorithm have it wrong.... This next
-			// block should be in an else block. Otherwise you'll
-			// have to deal with it as I did
-			else
-			{
-				offX++;
-				sX += 2;
-				determinant += sX;
-			}
-			/**************************
-			 * Figure out if all of these points are valid!
-			 * ***********************/
-			setPixel (x + offX, y + offY, color);
-			setPixel (x - offX, y + offY, color);
-			setPixel (x + offX, y - offY, color);
-			setPixel (x - offX, y - offY, color);
-			setPixel (x + offY, y + offX, color);
-			setPixel (x - offY, y + offX, color);
-			setPixel (x + offY, y - offX, color);
-			setPixel (x - offY, y - offX, color);
-		}
-		setPixel (x, y + i, color);
-		setPixel (x, y - i, color);
-		setPixel (x + i, y, color);
-		setPixel (x - i, y, color);
-	}
-}
-
 void FrameBuffer::drawTriangle (const int x1,
 				const int y1,
 				const int x2,
@@ -101,9 +45,6 @@ void FrameBuffer::drawTriangle (const int x1,
 				const int y3,
 				uint32_t color)
 {
-	/*drawLine (x1, y1, x2, y2, color);
-	drawLine (x2, y2, x3, y3, color);
-	drawLine (x3, y3, x1, y1, color);*/
 }
 // add a polygon structure with vertex vector and a count of vertex and find the
 // smallest and largest of x and y

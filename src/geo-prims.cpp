@@ -74,15 +74,17 @@ void Circle::draw ()
 			}
 			/**************************
 			 * Figure out if all of these points are valid!
+			 * or if I can skip it so I can save on those precious
+			 * precious cpu cycles
 			 * ***********************/
-			coord.push_back(x + offX);
-			coord.push_back(y + offY);
-			coord.push_back(x - offX);
-			coord.push_back(y + offY);
-			coord.push_back(x + offX);
-			coord.push_back(y - offY);
-			coord.push_back(x - offX);
-			coord.push_back(y - offY);
+			coord.push_back (x + offX);
+			coord.push_back (y + offY);
+			coord.push_back (x - offX);
+			coord.push_back (y + offY);
+			coord.push_back (x + offX);
+			coord.push_back (y - offY);
+			coord.push_back (x - offX);
+			coord.push_back (y - offY);
 
 			coord.push_back (x + offY);
 			coord.push_back (y + offX);

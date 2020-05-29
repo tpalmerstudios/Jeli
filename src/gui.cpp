@@ -84,45 +84,36 @@ int main ()
 				    event.key.keysym.sym == 'd' ||
 				    event.key.keysym.sym == SDLK_LEFT ||
 				    event.key.keysym.sym == SDLK_RIGHT)
-					// add <- and -> options
-					gs.player.turn = 0;
+					gs.player.stopTurn ();
 				// Stop walking on Key lift
 				if (event.key.keysym.sym == 'w' ||
 				    event.key.keysym.sym == 's' ||
 				    event.key.keysym.sym == SDLK_UP ||
 				    event.key.keysym.sym == SDLK_DOWN)
-					// add /\ and \/ options
-					gs.player.walk = 0;
+					gs.player.stopMove ();
 			} // Key up
 			if (event.type == SDL_KEYDOWN)
 			{
 				if (event.key.keysym.sym == 'a' ||
 				    event.key.keysym.sym == SDLK_LEFT)
-					gs.player.turn = -1;
+					gs.player.initTurn (-1); // Left
 				if (event.key.keysym.sym == 'd' ||
 				    event.key.keysym.sym == SDLK_RIGHT)
-					gs.player.turn = 1;
+					gs.player.initTurn (1); // Right
 				if (event.key.keysym.sym == 'w' ||
 				    event.key.keysym.sym == SDLK_UP)
-
-					gs.player.walk = 1;
+					gs.player.initMove (
+						1); // TODO: turn true/false
+						    // into enum with forward
+						    // backward
 				if (event.key.keysym.sym == 's' ||
 				    event.key.keysym.sym == SDLK_DOWN)
-					gs.player.walk = -1;
-			} // Keydown
-		}	  // Event occured
-		gs.player.angle += float (gs.player.turn) * .05;
-		float newX = gs.player.x +
-			     gs.player.walk * cos (gs.player.angle) * 0.1;
-		float newY = gs.player.y +
-			     gs.player.walk * sin (gs.player.angle) * 0.1;
-		if (int (newX) >= 0 && int (newX) < int (gs.map.w) &&
-		    int (newY) >= 0 && int (newY) < int (gs.map.h) &&
-		    gs.map.isEmpty (newX, newY))
-		{
-			gs.player.x = newX;
-			gs.player.y = newY;
-		} // walking
+					gs.player.initMove (
+						-1); // TODO: turn true/false
+						     // into enum with
+						     // forward backward
+			}			     // Keydown
+		}				     // Event occured
 		for (size_t i = 0; i < gs.monsters.size (); ++i)
 		{
 			gs.monsters [i].playerDist = std::sqrt (
