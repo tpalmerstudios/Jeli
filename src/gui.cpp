@@ -58,6 +58,7 @@ int main ()
 	SDL_Event event;
 	while (1)
 	{
+		float testX, testY;
 		if (SDL_PollEvent (&event))
 		{
 			// Quit the program if told to or if escape is pressed
@@ -91,23 +92,37 @@ int main ()
 			{
 				if (event.key.keysym.sym == 'a' ||
 				    event.key.keysym.sym == SDLK_LEFT)
+				{
 					gs.player.initTurn (-1); // Left
+				}
 				if (event.key.keysym.sym == 'd' ||
 				    event.key.keysym.sym == SDLK_RIGHT)
+				{
 					gs.player.initTurn (1); // Right
+				}
 				if (event.key.keysym.sym == 'w' ||
 				    event.key.keysym.sym == SDLK_UP)
-					gs.player.initMove (1);
+				{
+					gs.player.moveLoc (1, &testX, &testY);
+					if (gs.map.isEmpty (size_t (testX),
+							    size_t (testY)))
+						gs.player.initMove (1);
+				}
 				if (event.key.keysym.sym == 's' ||
 				    event.key.keysym.sym == SDLK_DOWN)
-					gs.player.initMove (-1);
+				{
+					gs.player.moveLoc (-1, &testX, &testY);
+					if (gs.map.isEmpty (size_t (testX),
+							    size_t (testY)))
+						gs.player.initMove (-1);
+				}
 			} // Keydown
 		}	  // Event occured
 		for (size_t i = 0; i < gs.monsters.size (); ++i)
 		{
 			gs.monsters [i].playerDist = std::sqrt (
-				pow (gs.player.x - gs.monsters [i].x, 2) +
-				pow (gs.player.y - gs.monsters [i].y, 2));
+				pow (gs.player.getX () - gs.monsters [i].x, 2) +
+				pow (gs.player.getY () - gs.monsters [i].y, 2));
 		} // set monster distance to player
 		std::sort (gs.monsters.begin (),
 			   gs.monsters.end ()); // sort from farthest to closest

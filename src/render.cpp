@@ -97,8 +97,8 @@ void drawMap (const GameState &gs,
 		obj.setColor (packColor (255, 0, 0));
 		fb.drawOver (obj.getCoords (), obj.getColor ());
 	} // show monsters / sprites
-	mapPositionAngle (gs.player.x,
-			  gs.player.y,
+	mapPositionAngle (gs.player.getX (),
+			  gs.player.getY (),
 			  gs.player.getAngle (),
 			  gs.map,
 			  fb,
@@ -138,8 +138,8 @@ void render (FrameBuffer &fb, const GameState &gs)
 			      (gs.player.fov * i) / float (fb.getW ());
 		for (float t = 0; t < 15; t += 0.014)
 		{
-			float x = gs.player.x + (t * cos (angle));
-			float y = gs.player.y + (t * sin (angle));
+			float x = gs.player.getX () + (t * cos (angle));
+			float y = gs.player.getY () + (t * sin (angle));
 			// If its a " " in game map, go on, otherwise we're
 			// going to go to the next ray
 			if (gs.map.isEmpty (x, y))
@@ -211,7 +211,7 @@ void drawSprite (FrameBuffer &fb,
 		 const Texture &texSprites)
 {
 	// Absolute direction from player to sprite in radians
-	float toSpriteAngle = atan2 (sprite.y - player.y, sprite.x - player.x);
+	float toSpriteAngle = atan2 (sprite.y - player.getY (), sprite.x - player.getX ());
 	while (toSpriteAngle - player.getAngle () > M_PI)
 		toSpriteAngle -= 2 * M_PI;
 	while (toSpriteAngle - player.getAngle () < -M_PI)

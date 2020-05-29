@@ -19,9 +19,9 @@ void GameState::spawn (int height)
 	float angle, fov;
 	// Do I need to check in both loops if equal to zero as both are set at
 	// same time? Or how should I break out of loop
-	for (int tY = 0; y == 0 && tY < map.getH (); ++tY)
+	for (size_t tY = 0; y == 0 && tY < map.getH (); ++tY)
 	{
-		for (int tX = 0; x == 0 && tX < map.getW (); ++tX)
+		for (size_t tX = 0; x == 0 && tX < map.getW (); ++tX)
 		{
 			if (map.isEmpty (tX, tY))
 			{
@@ -36,7 +36,7 @@ void GameState::spawn (int height)
 	// 2) How am I supposed to call this. Rework my GS init
 	// 3)
 	horizon = height / 2;
-	angle	= 0;
 	fov	= M_PI / 3.;
+	angle	= fov / 2;
 	player.spawn (x + 0.5, y + 0.5, angle, fov, horizon);
 }

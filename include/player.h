@@ -8,10 +8,10 @@ class Player
     private:
 	int turn = 0;
 	int walk = 0;
+	float x, y;
 	float angle = 0.;
 
     public:
-	float x, y;
 	float fov;
 	int horizon;
 	// float tilt; // head movement LR
@@ -20,8 +20,9 @@ class Player
 	void stopMove () { walk = 0; }
 	void initTurn (int dir);
 	void initMove (int dir);
-	int getX () { return x; }
-	int getY () { return y; }
+	float getX () const { return x; }
+	float getY () const { return y; }
+	void moveLoc (int dir, float *targetX, float *targetY);
 	// Is this dirty? It feels like I could use the constructor
 	// But how do I construct from the GameState class by calling the spawn
 	// function
