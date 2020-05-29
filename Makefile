@@ -9,7 +9,7 @@ ODIR = src/obj
 _DEPS = framebuffer.h geo-prims.h map.h overlay.h player.h render.h sprite.h textures.h utils.h
 DEPS = $(patsubst %, $(INCLUDE)/%, $(_DEPS))
 
-_OBJ = framebuffer.o geo-prims.o gui.o map.o render.o sprite.o textures.o utils.o
+_OBJ = gamestate.o player.o framebuffer.o geo-prims.o gui.o map.o render.o sprite.o textures.o utils.o
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
 
 $(ODIR)/%.o: src/%.cpp | $(ODIR)

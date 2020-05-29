@@ -19,20 +19,15 @@ int main ()
 	fb.setH (512); // Add custom screen sizes recieved from sdl
 	fb.img = std::vector<uint32_t> (fb.getW () * fb.getH (),
 					packColor (255, 255, 255));
-	GameState gs{
-		Map (),
-		{3.456, 2.345, 1.523, M_PI / 3., 0, 0, int (fb.getH ()) / 2},
-		{{3.523, 3.812, 2, 0},
-		 {1.834, 8.765, 0, 0},
-		 {5.323, 5.365, 1, 0},
-		 {4.123, 10.76, 1, 0}},
-		Texture ("media/brickTextures.png"),
-		Texture ("media/monsters.png")};
-	if (!gs.texWalls.count || !gs.texMonsters.count)
-	{
-		std::cerr << "Failed to load textures\n";
-		return -1;
-	}
+	GameState gs{Map (),
+		     Player (),
+		     {{3.523, 3.812, 2, 0},
+		      {1.834, 8.765, 0, 0},
+		      {5.323, 5.365, 1, 0},
+		      {4.123, 10.76, 1, 0}},
+		     "media/brickTextures.png",
+		     "media/monsters.png"};
+	gs.spawn (fb.getH ());
 	SDL_Window *window     = nullptr;
 	SDL_Renderer *renderer = nullptr;
 
@@ -102,18 +97,12 @@ int main ()
 					gs.player.initTurn (1); // Right
 				if (event.key.keysym.sym == 'w' ||
 				    event.key.keysym.sym == SDLK_UP)
-					gs.player.initMove (
-						1); // TODO: turn true/false
-						    // into enum with forward
-						    // backward
+					gs.player.initMove (1);
 				if (event.key.keysym.sym == 's' ||
 				    event.key.keysym.sym == SDLK_DOWN)
-					gs.player.initMove (
-						-1); // TODO: turn true/false
-						     // into enum with
-						     // forward backward
-			}			     // Keydown
-		}				     // Event occured
+					gs.player.initMove (-1);
+			} // Keydown
+		}	  // Event occured
 		for (size_t i = 0; i < gs.monsters.size (); ++i)
 		{
 			gs.monsters [i].playerDist = std::sqrt (
@@ -122,7 +111,6 @@ int main ()
 		} // set monster distance to player
 		std::sort (gs.monsters.begin (),
 			   gs.monsters.end ()); // sort from farthest to closest
-						// (using operator< overload)
 
 		render (fb, gs);
 		SDL_UpdateTexture (frameBufferTexture,

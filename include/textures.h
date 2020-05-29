@@ -1,12 +1,13 @@
+#ifndef TEXTURES_H
+#define TEXTURES_H
+
 #include <cstdint>
 #include <string>
 #include <vector>
 
-#ifndef TEXTURES_H
-#define TEXTURES_H
-
-struct Texture
+class Texture
 {
+    public:
 	size_t imgWidth, imgHeight;
 	size_t count, size;
 	std::vector<uint32_t> img;

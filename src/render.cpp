@@ -99,7 +99,7 @@ void drawMap (const GameState &gs,
 	} // show monsters / sprites
 	mapPositionAngle (gs.player.x,
 			  gs.player.y,
-			  gs.player.angle,
+			  gs.player.getAngle (),
 			  gs.map,
 			  fb,
 			  packColor (0, 128, 255));
@@ -134,7 +134,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 		// Actual ray casting starting with left side.
 		// Actual math is basing this off of angle minus
 		// half the field of view plus the current ray angle
-		float angle = gs.player.angle - (gs.player.fov / 2) +
+		float angle = gs.player.getAngle () - (gs.player.fov / 2) +
 			      (gs.player.fov * i) / float (fb.getW ());
 		for (float t = 0; t < 15; t += 0.014)
 		{
@@ -146,7 +146,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 				continue;
 			size_t texID = gs.map.get (x, y);
 			assert (texID < gs.texWalls.count);
-			float dist	    = t * cos (angle - gs.player.angle);
+			float dist	    = t * cos (angle - gs.player.getAngle ());
 			depthBuffer [i]	    = dist;
 			size_t columnHeight = floor (float (fb.getH ()) / dist);
 			int xTexCoord	    = wallXTexCoord (x, y, gs.texWalls);
@@ -212,15 +212,15 @@ void drawSprite (FrameBuffer &fb,
 {
 	// Absolute direction from player to sprite in radians
 	float toSpriteAngle = atan2 (sprite.y - player.y, sprite.x - player.x);
-	while (toSpriteAngle - player.angle > M_PI)
+	while (toSpriteAngle - player.getAngle () > M_PI)
 		toSpriteAngle -= 2 * M_PI;
-	while (toSpriteAngle - player.angle < -M_PI)
+	while (toSpriteAngle - player.getAngle () < -M_PI)
 		toSpriteAngle += 2 * M_PI;
 
 	size_t spriteDispSize = std::min (
 		1000, static_cast<int> (fb.getH () / sprite.playerDist));
 	// Adjust if removing displayed map
-	int offsetX = (toSpriteAngle - player.angle) * fb.getW () +
+	int offsetX = (toSpriteAngle - player.getAngle ()) * fb.getW () +
 		      (fb.getW () / 2) - texSprites.size / 2;
 	int offsetY = player.horizon - (spriteDispSize / 2);
 

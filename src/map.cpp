@@ -41,7 +41,8 @@ bool Map::isEmpty (const size_t iX, const size_t iY) const
 {
 	// Ensure the size of the map is the size of w * h.
 	// Also that the coordinates are within the boundaries of the map
-	assert (iX < w && iY < h && sizeof (map) == (w * h) + 1);
+	if (!((iX < w && iY < h) || (sizeof (map) == (w * h) + 1)))
+			return false;
 	// Subtracting 0 converts the char to an int
 	// Returns what number is at that location.
 	return map [iX + (iY * w)] == ' ';
