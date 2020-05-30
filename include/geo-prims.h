@@ -54,10 +54,10 @@ class Circle
 	Circle () {}
 	~Circle () { coord.clear (); }
 	Circle (int x, int y, uint32_t col) : origin (x, y)
-		{
-				color = col;
-				draw ();
-		}
+	{
+		color = col;
+		draw ();
+	}
 };
 
 class Rectangle
@@ -96,6 +96,46 @@ class Rectangle
 	}
 	Rectangle () {}
 	~Rectangle () { coord.clear (); }
+};
+
+class Triangle
+{
+    private:
+	Point a, b, c;
+	uint32_t color;
+	std::vector<int> coord;
+
+    public:
+	uint32_t getColor () { return color; }
+	void setColor (uint32_t rgba) { color = rgba; }
+
+	int getAX () { return a.getX (); }
+	int getAY () { return a.getY (); }
+	int getBX () { return b.getX (); }
+	int getBY () { return b.getY (); }
+	int getCX () { return c.getX (); }
+	int getCY () { return c.getY (); }
+
+	void setAX (int setX) { a.setX (setX); }
+	void setAY (int setY) { a.setY (setY); }
+	void setBX (int setX) { b.setX (setX); }
+	void setBY (int setY) { b.setY (setY); }
+	void setCX (int setX) { c.setX (setX); }
+	void setCY (int setY) { c.setY (setY); }
+	void draw ();
+	std::vector<int> getCoords ()
+	{
+		if (coord.empty ())
+			draw ();
+		return coord;
+	}
+	Triangle (int ax, int ay, int bx, int by, int cx, int cy, uint32_t col)
+	    : a (ax, ay), b (bx, by), c (cx, cy), color (col)
+	{
+		draw ();
+	}
+	Triangle () {}
+	~Triangle () { coord.clear (); }
 };
 
 class Polygon
@@ -146,9 +186,8 @@ class Line
 		return coord;
 	}
 	Line (int ax, int ay, int bx, int by, uint32_t col)
-	    : origin (ax, ay), end (bx, by)
+	    : origin (ax, ay), end (bx, by), color (col)
 	{
-		color = col;
 		draw ();
 	}
 	Line () {}

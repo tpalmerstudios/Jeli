@@ -35,6 +35,20 @@ void Rectangle::draw ()
 	}
 }
 
+void Triangle::draw ()
+{
+		int ax = getAX ();
+		int ay = getAY ();
+		int bx = getBX ();
+		int by = getBY ();
+		int cx = getCX ();
+		int cy = getCY ();
+		// Get triangle min and max x and why
+		// Should be y^ but I ain't fixing it
+		scanLine (ax, ay, bx, by);
+		scanLine
+}
+
 void Circle::draw ()
 {
 	int x	   = getX ();
