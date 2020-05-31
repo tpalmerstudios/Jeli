@@ -197,8 +197,11 @@ void mapPositionAngle (float x,
 	cy		  = mapH * (y - sin (angle + (M_PI / 6)));
 	std::cout << ax << ", " << ay << "\n" << bx << ", " << by << "\n" << cx << ", " << cy << "\n";
 	Triangle trigon (ax, ay, bx, by, cx, cy, color);
-
-	fb.drawOver (trigon.getCoords (), trigon.getColor ());
+	// No coords are returned
+	std::vector<int> tempVec = trigon.getCoords ();
+	for (size_t i = 0; i < tempVec.size (); i++)
+			std::cout << tempVec [i] << " ";
+	fb.drawOver (tempVec, trigon.getColor ());
 }
 
 void drawSprite (FrameBuffer &fb,

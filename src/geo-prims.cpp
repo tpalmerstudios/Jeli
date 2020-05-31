@@ -43,11 +43,12 @@ void Triangle::flatTop (int ax, int ay, int bx, int by, int cx, int cy)
 
 	for (int row = cy; row > ay; --row)
 	{
-		// I am calling this wrong!
 		Line line ((int) closeX, row, (int) farX, row);
 		std::vector<int> lineCoords = line.getCoords ();
 		coord.insert (
 			coord.end (), lineCoords.begin (), lineCoords.end ());
+		for (size_t i = 0; i < coord.size (); i++)
+			std::cout << coord [i] << " ";
 		closeX -= iSlope1;
 		farX -= iSlope2;
 	}
@@ -145,9 +146,9 @@ void Triangle::draw ()
 	else
 	{
 		// It appears this following line is the issue
-		int dx = (int) (ax +
-			    ((float) ((float) (by - ay) / (float) (cy - ay))) *
-				    (cx - ax));
+		int dx = (int) (ax + ((float) ((float) (by - ay) /
+					       (float) (cy - ay))) *
+					     (cx - ax));
 
 		int dy = by;
 		flatTop (ax, ay, bx, by, dx, dy);
@@ -446,5 +447,9 @@ void Line::draw ()
 			}
 		}
 	}
+
+	std::cout << coord.size ();
+	for (size_t i = 0; i < coord.size (); i++)
+		std::cout << coord [i] << " ";
 }
 
