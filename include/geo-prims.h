@@ -122,6 +122,9 @@ class Triangle
 	void setBY (int setY) { b.setY (setY); }
 	void setCX (int setX) { c.setX (setX); }
 	void setCY (int setY) { c.setY (setY); }
+
+	void flatTop (int, int, int, int, int, int);
+	void flatBottom (int, int, int, int, int, int);
 	void draw ();
 	std::vector<int> getCoords ()
 	{
@@ -189,6 +192,19 @@ class Line
 	    : origin (ax, ay), end (bx, by), color (col)
 	{
 		draw ();
+	}
+	Line (int ax, int ay, int bx, int by)
+	    : origin (ax, ay), end (bx, by)
+	{
+		draw ();
+	}
+	void reinit (int ax, int ay, int bx, int by)
+	{
+			origin.setX (ax);
+			origin.setY (ay);
+			end.setX (bx);
+			end.setY (by);
+			draw ();
 	}
 	Line () {}
 	~Line () { coord.clear (); }

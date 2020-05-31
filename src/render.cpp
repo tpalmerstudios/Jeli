@@ -17,12 +17,8 @@
 #include "render.h"
 
 int wallXTexCoord (const float hitX, const float hitY, const Texture &texWalls);
-void render (FrameBuffer &fb,
-	     Map &map,
-	     Player &player,
-	     std::vector<Sprite> &sprites,
-	     Texture &texWalls,
-	     Texture &texMonsters);
+// Can I just pass the gamestate
+void render (FrameBuffer &fb, GameState &gs);
 void drawSprite (FrameBuffer &fb,
 		 const Sprite &sprite,
 		 const std::vector<float> &depthBuffer,
@@ -146,7 +142,7 @@ void render (FrameBuffer &fb, const GameState &gs)
 				continue;
 			size_t texID = gs.map.get (x, y);
 			assert (texID < gs.texWalls.count);
-			float dist	    = t * cos (angle - gs.player.getAngle ());
+			float dist = t * cos (angle - gs.player.getAngle ());
 			depthBuffer [i]	    = dist;
 			size_t columnHeight = floor (float (fb.getH ()) / dist);
 			int xTexCoord	    = wallXTexCoord (x, y, gs.texWalls);
@@ -157,14 +153,16 @@ void render (FrameBuffer &fb, const GameState &gs)
 			for (size_t j = 0; j < columnHeight; ++j)
 			{
 				// Origin of the columns... floor doesn't seem
-				// to do well TODO: Fix origin, columnHeigh, etc.
+				// to do well TODO: Fix origin, columnHeigh,
+				// etc.
 				int pixY = j + gs.player.horizon -
 					   (columnHeight / 2);
 				if (pixY >= 0 && pixY < int (fb.getH ()))
 					fb.setPixel (pixX, pixY, column [j]);
-				// Why are there columns that are several pixels 
+				// Why are there columns that are several pixels
 				// wide sometimes? I don't understand
-				// Like the same issue I think as this previous one
+				// Like the same issue I think as this previous
+				// one
 			}
 			break;
 		} // draw out the length of the ray
@@ -187,21 +185,20 @@ void mapPositionAngle (float x,
 		       FrameBuffer &fb,
 		       const uint32_t color)
 {
+	int ax, ay, bx, by, cx, cy;
+
 	const size_t mapW = (fb.getW () / 4) / map.w;
 	const size_t mapH = (fb.getH () / 3) / map.h;
-	float loop	  = 0.;
-	for (float nAngle = (angle - M_PI) - (M_PI / 8);
-	     nAngle <= (angle - M_PI) + (M_PI / 6);
-	     nAngle += (M_PI / 4) * loop)
-	{
-		loop += .01;
-		for (float j = 0; j < 1; j += 0.010)
-		{
-			float fillX = x + (j * cos (nAngle));
-			float fillY = y + (j * sin (nAngle));
-			fb.setPixel (fillX * mapW, fillY * mapH, color);
-		} // draw line of angle
-	}	  // Go through angles
+	ax		  = mapW * (x + cos (angle));
+	ay		  = mapH * (y + sin (angle));
+	bx		  = mapW * (x - cos (angle - (M_PI / 6)));
+	by		  = mapH * (y - sin (angle - (M_PI / 6)));
+	cx		  = mapW * (x - cos (angle + (M_PI / 6)));
+	cy		  = mapH * (y - sin (angle + (M_PI / 6)));
+	std::cout << ax << ", " << ay << "\n" << bx << ", " << by << "\n" << cx << ", " << cy << "\n";
+	Triangle trigon (ax, ay, bx, by, cx, cy, color);
+
+	fb.drawOver (trigon.getCoords (), trigon.getColor ());
 }
 
 void drawSprite (FrameBuffer &fb,
@@ -211,7 +208,8 @@ void drawSprite (FrameBuffer &fb,
 		 const Texture &texSprites)
 {
 	// Absolute direction from player to sprite in radians
-	float toSpriteAngle = atan2 (sprite.y - player.getY (), sprite.x - player.getX ());
+	float toSpriteAngle =
+		atan2 (sprite.y - player.getY (), sprite.x - player.getX ());
 	while (toSpriteAngle - player.getAngle () > M_PI)
 		toSpriteAngle -= 2 * M_PI;
 	while (toSpriteAngle - player.getAngle () < -M_PI)

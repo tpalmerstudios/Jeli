@@ -34,19 +34,127 @@ void Rectangle::draw ()
 		}
 	}
 }
+void Triangle::flatTop (int ax, int ay, int bx, int by, int cx, int cy)
+{
+	float iSlope1 = ((float) (cx - ax)) / ((float) (cy - ay));
+	float iSlope2 = ((float) (cx - bx)) / ((float) (cy - by));
+	float closeX  = (float) cx;
+	float farX    = (float) cx;
+
+	for (int row = cy; row > ay; --row)
+	{
+		// I am calling this wrong!
+		Line line ((int) closeX, row, (int) farX, row);
+		std::vector<int> lineCoords = line.getCoords ();
+		coord.insert (
+			coord.end (), lineCoords.begin (), lineCoords.end ());
+		closeX -= iSlope1;
+		farX -= iSlope2;
+	}
+}
+void Triangle::flatBottom (int ax, int ay, int bx, int by, int cx, int cy)
+{
+	// This makes the world go round.
+	float iSlope1 = ((float) (bx - ax)) / ((float) (by - ay));
+	float iSlope2 = ((float) (cx - ax)) / ((float) (cy - ay));
+	float closeX  = (float) ax;
+	float farX    = (float) ax;
+
+	for (int row = ay; row <= by; ++row)
+	{
+		Line line ((int) closeX, row, (int) farX, row);
+		std::vector<int> lineCoords = line.getCoords ();
+		coord.insert (
+			coord.end (), lineCoords.begin (), lineCoords.end ());
+		closeX += iSlope1;
+		farX += iSlope2;
+	}
+}
 
 void Triangle::draw ()
 {
-		int ax = getAX ();
-		int ay = getAY ();
-		int bx = getBX ();
-		int by = getBY ();
-		int cx = getCX ();
-		int cy = getCY ();
-		// Get triangle min and max x and why
-		// Should be y^ but I ain't fixing it
-		scanLine (ax, ay, bx, by);
-		scanLine
+	coord.clear ();
+	int ax, ay, bx, by, cx, cy;
+	if (getAY () <= getBY () && getAY () <= getCY ())
+	{
+		// If A is smallest
+		ax = getAX ();
+		ay = getAY ();
+		if (getBY () <= getCY ())
+		{
+			bx = getBX ();
+			by = getBY ();
+			cx = getCX ();
+			cy = getCY ();
+		}
+		else
+		{
+			bx = getCX ();
+			by = getCY ();
+			cx = getBX ();
+			cy = getBY ();
+		}
+	}
+	else if (getBY () <= getAY () && getBY () <= getCY ())
+	{
+		// If  b is smallest
+		ax = getBX ();
+		ay = getBY ();
+		if (getAY () <= getCY ())
+		{
+			bx = getAX ();
+			by = getAY ();
+			cx = getCX ();
+			cy = getCY ();
+		}
+		else
+		{
+			bx = getCX ();
+			by = getCY ();
+			cx = getAX ();
+			cy = getAY ();
+		}
+	}
+	else
+	{
+		ax = getCX ();
+		ay = getCY ();
+		if (getAY () <= getBY ())
+		{
+			bx = getAX ();
+			by = getAY ();
+			cx = getBX ();
+			cy = getBY ();
+		}
+		else
+		{
+			bx = getBX ();
+			by = getBY ();
+			cx = getAX ();
+			cy = getAY ();
+		}
+	}
+	if (by == cy)
+	{
+		flatBottom (ax, ay, bx, by, cx, cy);
+	}
+	else if (ay == by)
+	{
+		flatTop (ax, ay, bx, by, cx, cy);
+	}
+	else
+	{
+		// It appears this following line is the issue
+		int dx = (int) (ax +
+			    ((float) ((float) (by - ay) / (float) (cy - ay))) *
+				    (cx - ax));
+
+		int dy = by;
+		flatTop (ax, ay, bx, by, dx, dy);
+		flatBottom (bx, by, dx, dy, cx, cy);
+	}
+	// Get triangle min and max x and why
+	// Should be y^ but I ain't fixing it
 }
 
 void Circle::draw ()
@@ -189,11 +297,50 @@ void Line::draw ()
 	int bx = end.getX ();
 	int by = end.getY ();
 	// Cant find definition? Its in geo-prims.h
-	if (abs (by - ay) < abs (bx - ax))
+	if (ay == by)
+	{
+		if ((bx - ax) > 0)
+		{
+			for (int i = (ax < 0) ? 0 : ax; i < bx; ++i)
+			{
+				coord.push_back (i);
+				coord.push_back (ay);
+			}
+		}
+		else
+		{
+			for (int i = (bx < 0) ? 0 : bx; i < ax; ++i)
+			{
+				coord.push_back (i);
+				coord.push_back (ay);
+			}
+		}
+	}
+	else if (ax == bx)
+	{
+		if ((by - ay) > 0)
+		{
+			for (int i = (ay < 0) ? 0 : ay; i < by; ++i)
+			{
+				coord.push_back (ax);
+				coord.push_back (i);
+			}
+		}
+		else
+		{
+			for (int i = (by < 0) ? 0 : by; i < ay; ++i)
+			{
+				coord.push_back (ax);
+				coord.push_back (i);
+			}
+		}
+	}
+	else if (abs (by - ay) < abs (bx - ax))
 	{
 		if (ax > bx)
 		{
 			// plotLineLow
+			// TODO: fix this bullshit
 			int dx	  = ax - bx; // Delta X
 			int dy	  = ay - by; // Delta Y
 			int yMove = 1;
@@ -205,7 +352,7 @@ void Line::draw ()
 			int diff  = 2 * dy - dx;
 			int fillY = by;
 
-			for (int fillX = bx; fillX < ax; ++fillX)
+			for (int fillX = (bx < 0) ? 0 : bx; fillX < ax; ++fillX)
 			{
 				coord.push_back (fillX);
 				coord.push_back (fillY);
@@ -231,7 +378,7 @@ void Line::draw ()
 			int diff  = 2 * dy - dx;
 			int fillY = ay;
 
-			for (int fillX = ax; fillX < bx; ++fillX)
+			for (int fillX = (ax < 0) ? 0 : ax; fillX < bx; ++fillX)
 			{
 				coord.push_back (fillX);
 				coord.push_back (fillY);
@@ -260,7 +407,7 @@ void Line::draw ()
 			int diff  = 2 * dx - dy;
 			int fillX = bx;
 
-			for (int fillY = by; fillY < ay; ++fillY)
+			for (int fillY = (by < 0) ? 0 : by; fillY < ay; ++fillY)
 			{
 				coord.push_back (fillX);
 				coord.push_back (fillY);
@@ -286,7 +433,7 @@ void Line::draw ()
 			int diff  = 2 * dx - dy;
 			int fillX = ax;
 
-			for (int fillY = ay; fillY < by; ++fillY)
+			for (int fillY = (ay < 0) ? 0 : ay; fillY < by; ++fillY)
 			{
 				coord.push_back (fillX);
 				coord.push_back (fillY);
@@ -300,3 +447,4 @@ void Line::draw ()
 		}
 	}
 }
+
