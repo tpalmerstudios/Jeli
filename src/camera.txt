@@ -1,0 +1,10 @@
+Basically a rewrite of certain aspects of the game engine
+1. All objects and NPCs should have a unique ID and an altitude
+2. A custom database would be a great way to learn and implement this
+3. Given (height, altitude, and distance) of an object I can adapt to what I see
+4. The actual algorithm
+    view height = objectHeight/Distance
+    positioning = altitudeDelta/Distance
+        that is camera altitude - objectAltitude
+    each object is saved as its own array
+5. Composite based on distance
