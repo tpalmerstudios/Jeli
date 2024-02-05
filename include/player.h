@@ -13,6 +13,9 @@ class Player
 
     public:
 	float fov;
+// float altitude;
+// this will be used with the algorithm to determine view point
+// though I need to add a camera header that is attached (usually) to players head
 	int horizon;
 	// float tilt; // head movement LR
 	float getAngle () const { return angle; }
