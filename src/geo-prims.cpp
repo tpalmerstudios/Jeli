@@ -3,24 +3,25 @@
 
 #include <geo-prims.h>
 
-int Rectangle::getAX ()
+int Rectangle::getAX () const
 {
 	return (origin.getX () < end.getX ()) ? origin.getX () : end.getX ();
 }
-int Rectangle::getAY ()
+int Rectangle::getAY () const
 {
 	return (origin.getY () < end.getY ()) ? origin.getY () : end.getY ();
 }
-int Rectangle::getBX ()
+int Rectangle::getBX () const
 {
 	return (end.getX () > origin.getX ()) ? end.getX () : origin.getX ();
 }
-int Rectangle::getBY ()
+int Rectangle::getBY () const
 {
 	return (end.getY () > origin.getY ()) ? end.getY () : origin.getY ();
 }
 void Rectangle::draw ()
 {
+        coord.clear ();
 	const size_t rw = getBX () - getAX ();
 	const size_t rh = getBY () - getAY ();
 	const int cx	= getAX ();
@@ -41,17 +42,15 @@ void Triangle::flatTop (int ax, int ay, int bx, int by, int cx, int cy)
 	float closeX  = (float) cx;
 	float farX    = (float) cx;
 
-	for (int row = cy; row > ay; --row)
-	{
-		Line line ((int) closeX, row, (int) farX, row);
-		std::vector<int> lineCoords = line.getCoords ();
-		coord.insert (
-			coord.end (), lineCoords.begin (), lineCoords.end ());
-		for (size_t i = 0; i < coord.size (); i++)
-			std::cout << coord [i] << " ";
-		closeX -= iSlope1;
-		farX -= iSlope2;
-	}
+        for (int row = cy; row > ay; --row)
+        {
+                Line line ((int) closeX, row, (int) farX, row);
+                const std::vector<int> &lineCoords = line.getCoords ();
+                coord.insert (
+                        coord.end (), lineCoords.begin (), lineCoords.end ());
+                closeX -= iSlope1;
+                farX -= iSlope2;
+        }
 }
 void Triangle::flatBottom (int ax, int ay, int bx, int by, int cx, int cy)
 {
@@ -61,15 +60,15 @@ void Triangle::flatBottom (int ax, int ay, int bx, int by, int cx, int cy)
 	float closeX  = (float) ax;
 	float farX    = (float) ax;
 
-	for (int row = ay; row <= by; ++row)
-	{
-		Line line ((int) closeX, row, (int) farX, row);
-		std::vector<int> lineCoords = line.getCoords ();
-		coord.insert (
-			coord.end (), lineCoords.begin (), lineCoords.end ());
-		closeX += iSlope1;
-		farX += iSlope2;
-	}
+        for (int row = ay; row <= by; ++row)
+        {
+                Line line ((int) closeX, row, (int) farX, row);
+                const std::vector<int> &lineCoords = line.getCoords ();
+                coord.insert (
+                        coord.end (), lineCoords.begin (), lineCoords.end ());
+                closeX += iSlope1;
+                farX += iSlope2;
+        }
 }
 
 void Triangle::draw ()
@@ -160,7 +159,8 @@ void Triangle::draw ()
 
 void Circle::draw ()
 {
-	int x	   = getX ();
+        coord.clear ();
+        int x	   = getX ();
 	int y	   = getY ();
 	size_t rad = getRad ();
 
@@ -293,7 +293,8 @@ float Polygon::largestY ()
 }
 void Line::draw ()
 {
-	int ax = origin.getX ();
+        coord.clear ();
+        int ax = origin.getX ();
 	int ay = origin.getY ();
 	int bx = end.getX ();
 	int by = end.getY ();
@@ -448,8 +449,5 @@ void Line::draw ()
 		}
 	}
 
-	std::cout << coord.size ();
-	for (size_t i = 0; i < coord.size (); i++)
-		std::cout << coord [i] << " ";
 }
 
