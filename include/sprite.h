@@ -3,12 +3,22 @@
 
 #include <cstdlib>
 
+/**
+ * @brief Billboards rendered after walls for enemies and objects.
+ */
 struct Sprite
 {
-	float x, y;
-	size_t texID;
-	float playerDist;
-	bool operator< (const Sprite &s) const;
+        /// World-space position in map units.
+        float x, y;
+        /// Index into the monster texture atlas.
+        size_t texID;
+        /// Cached distance from player, used for painter's sorting.
+        float playerDist;
+
+        /**
+         * @brief Sort sprites from farthest to nearest for correct overlap.
+         */
+        bool operator< (const Sprite &s) const;
 };
 
 #endif // SPRITE_H
